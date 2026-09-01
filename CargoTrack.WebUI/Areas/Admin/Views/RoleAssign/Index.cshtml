@@ -1,0 +1,36 @@
+﻿@model List<ResultUserDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int count = 0;
+}
+
+<h3>Kullanıcı Listesi</h3>
+
+<table class="table table-bordered table-hover">
+
+    <tr>
+        <th>#</th>
+        <th>Ad Soyad</th>
+        <th>Email</th>
+        <th>Kullanıcı Adı</th>
+        <th>İşlemler</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        count++;
+        <tr>
+            <th>@count</th>
+            <td>@item.FullName</td>
+            <td>@item.Email</td>
+            <td>@item.UserName</td>
+            <td>
+                <a href="#" class="btn btn-dark">Rol Ata</a>
+            </td>
+        </tr>
+    }
+
+
+
+</table>

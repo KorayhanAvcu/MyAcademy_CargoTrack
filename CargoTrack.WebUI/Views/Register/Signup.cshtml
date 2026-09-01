@@ -1,0 +1,56 @@
+﻿
+@model RegisterUserDto
+@{
+    ViewData["Title"] = "Singup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Singup</h1>
+<div class="container-fluid col-8">
+    <form method="post">
+        <div class="row col-12">
+            <div class="form-group col-6">
+                <label>Ad</label>
+                <input type="text" asp-for="FirstName" class="form-control" />
+                <span class="text-danger" asp-validation-for="FirstName"></span>
+            </div>
+            <div class="form-group col-6">
+                <label>Soyad</label>
+                <input type="text" asp-for="LastName" class="form-control" />
+                <span class="text-danger" asp-validation-for="LastName"></span>
+            </div>
+        </div>
+        
+        <div class="row col-12">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" asp-for="Email" class="form-control" />
+                <span class="text-danger" asp-validation-for="Email"></span>
+            </div>
+        </div>
+        <div class="row col-12">
+            <div class="form-group">
+                <label>Kullanıcı Adı</label>
+                <input type="text" asp-for="UserName" class="form-control" />
+                <span class="text-danger" asp-validation-for="UserName"></span>
+            </div>
+        </div>
+        <div class="row col-12">
+            <div class="form-group col-6">
+                <label>Şifre</label>
+                <input type="password" asp-for="Password" class="form-control" />
+                <span class="text-danger" asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group col-6">
+                <label>Şifre Tekrarı</label>
+                <input type="password" asp-for="ConfirmPassword" class="form-control" />
+                <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+            </div>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <button class="btn btn-dark mt-3">Kayıt Ol</button>
+
+    </form>
+</div>
+
+

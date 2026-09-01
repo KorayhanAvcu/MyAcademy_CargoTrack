@@ -1,0 +1,42 @@
+﻿@model List<ResultAboutDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Hakkımızda</h1>
+@if(!Model.Any())
+{
+    <div>Henüz bir hakkımızda oluşturulmamış.</div>
+    <a href="/Admin/About/Create" class="btn btn-info">Yeni hakkımızda oluştur</a>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+
+        <tr>
+            
+            <th>Görsel</th>
+            <th>Başlık</th>
+            <th>Açıklama</th>
+            <th>İşlemler</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                
+                <td><img src="@item.ImageUrl" alt="Görsel" style="width: 100px; height: auto;" /></td>
+                <td>@item.Title</td>
+                <td>@item.Description</td>
+                <td>
+                    <a href="/Admin/About/Update/@item.Id" class="btn btn-info">Güncelle</a>
+                    <a href="/Admin/About/Delete/@item.Id" onclick="return confirm('Silmek istediğinize emin misiniz?')" class="btn btn-danger">Sil</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+
+
