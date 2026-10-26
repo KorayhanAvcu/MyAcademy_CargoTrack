@@ -16,5 +16,6 @@ namespace CargoTrack.Entity.Entities
         public virtual IList<Cargo> SentCargos { get; set; }
         public virtual IList<Cargo> ReceivedCargos { get; set; }
         public virtual IList<Address> Addresses { get; set; }
+        public virtual Employee? Employee { get; set; }
     }
 }

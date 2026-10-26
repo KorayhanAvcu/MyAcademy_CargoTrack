@@ -11,5 +11,6 @@ namespace CargoTrack.Entity.Entities
     {
         public string Name { get; set; }
         public virtual IList<Branch> Branches { get; set; }
+        public virtual IList<TransferCenter> TransferCenters { get; set; }
     }
 }

@@ -8,19 +8,36 @@ namespace CargoTrack.Entity.Entities
         public string TrackCode { get; set; }
         public DateTime ShipmentDate { get; set; }
         public DateTime EstimatedArrivalDate { get; set; }
+        public DateTime? DeliveredDate { get; set; }
+
+        // Ölçüler ve fiyat
         public double Weight { get; set; }
+        public double Width { get; set; }
+        public double Length { get; set; }
+        public double Height { get; set; }
+        public double Desi { get; set; }
+        public decimal Price { get; set; }
+
         public CargoType CargoType { get; set; }
+        public DeliveryType DeliveryType { get; set; }
         public CargoStatus CargoStatus { get; set; }
+
+        // Teslimat kuralları
+        public string? DeliveryCode { get; set; }
+        public int FailedAttemptCount { get; set; }
+
         public Guid SenderId { get; set; }
-        public Guid ReceiverId { get; set; }    
+        public Guid ReceiverId { get; set; }
         public Guid OriginBranchId { get; set; }
         public Guid DestinationBranchId { get; set; }
-        
 
         //Navigation Properties
         public virtual AppUser Sender { get; set; }
         public virtual AppUser Receiver { get; set; }
         public virtual Branch OriginBranch { get; set; }
         public virtual Branch DestinationBranch { get; set; }
+        public virtual IList<CargoMovement> Movements { get; set; }
+        public virtual IList<DeliveryException> DeliveryExceptions { get; set; }
+        public virtual Delivery? Delivery { get; set; }
     }
 }
