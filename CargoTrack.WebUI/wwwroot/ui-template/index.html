@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CargoTrack - Kargo Takip</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#dce9ff",
+                        "tertiary-container": "#171e24",
+                        "tertiary-fixed": "#dce3eb",
+                        "on-surface-variant": "#43474e",
+                        "on-secondary-container": "#603100",
+                        "outline": "#74777e",
+                        "secondary-fixed": "#ffdcc3",
+                        "secondary": "#904d00",
+                        "background": "#f8f9ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "error": "#ba1a1a",
+                        "on-background": "#0b1c30",
+                        "on-tertiary-fixed-variant": "#40484e",
+                        "on-primary-fixed-variant": "#2f4868",
+                        "surface-bright": "#f8f9ff",
+                        "primary-fixed-dim": "#afc8ee",
+                        "primary-fixed": "#d3e3ff",
+                        "on-secondary-fixed": "#2f1500",
+                        "primary-container": "#001e3c",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-primary-fixed": "#001c39",
+                        "primary": "#00040c",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb77d",
+                        "surface-variant": "#d3e4fe",
+                        "surface-dim": "#cbdbf5",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#7f868d",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "outline-variant": "#c4c6ce",
+                        "surface-container": "#e5eeff",
+                        "inverse-surface": "#213145",
+                        "on-primary-container": "#6f87aa",
+                        "tertiary-fixed-dim": "#c0c7cf",
+                        "on-tertiary-fixed": "#151c22",
+                        "on-surface": "#0b1c30",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#afc8ee",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#486081",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "tertiary": "#000307",
+                        "secondary-container": "#fd8b00",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-padding": "4rem",
+                        "container-max-width": "1200px",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1.5rem",
+                        "margin-mobile": "1rem"
+                    },
+                    "fontFamily": {
+                        "status-label": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-xl": ["Hanken Grotesk"],
+                        "label-caps": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "status-label": ["13px", { "lineHeight": "18px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Hanken Grotesk', sans-serif; background-color: #f8f9ff; color: #0b1c30; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .filled-icon { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface dark:bg-primary-container font-body-md text-body-md docked full-width top-0 border-b border-outline-variant dark:border-on-primary-container shadow-sm">
+<div class="flex justify-between items-center px-gutter py-4 max-w-container-max-width mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">package_2</span>
+<span class="font-headline-md text-headline-md font-bold text-on-background dark:text-surface-bright">CargoTrack</span>
+</div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-tertiary-container transition-colors px-2 py-1 rounded" href="#">Ana Sayfa</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-bold border-b-2 border-secondary pb-1" href="#">Kargo Takip</a>
+<a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-tertiary-container transition-colors px-2 py-1 rounded" href="#">Şubelerimiz</a>
+<a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-tertiary-container transition-colors px-2 py-1 rounded" href="#">Hizmetlerimiz</a>
+<a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-tertiary-container transition-colors px-2 py-1 rounded" href="#">Hakkımızda</a>
+<a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-tertiary-container transition-colors px-2 py-1 rounded" href="#">İletişim</a>
+</div>
+<button class="bg-primary-container text-on-primary px-6 py-2.5 rounded-DEFAULT font-semibold flex items-center gap-2 scale-95 active:opacity-80 transition-transform hover:bg-primary">
+<span class="material-symbols-outlined text-sm">send</span>
+                Kargo Gönder
+            </button>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow max-w-container-max-width mx-auto w-full px-margin-mobile md:px-gutter py-section-padding">
+<!-- Header Section -->
+<div class="text-center mb-stack-lg">
+<h1 class="font-headline-xl text-headline-xl text-on-background mb-4">Kargo Takip</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Takip numaranızı girerek gönderinizin güncel durumunu görüntüleyebilirsiniz.</p>
+</div>
+<!-- Search Card -->
+<div class="bg-white rounded-lg shadow-sm border border-outline-variant p-6 md:p-8 max-w-3xl mx-auto mb-section-padding relative overflow-hidden">
+<div class="absolute -right-16 -top-16 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[200px] text-primary">local_shipping</span>
+</div>
+<div class="flex items-center gap-3 mb-6 relative z-10">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-background">Kargo Takip Numarası</h2>
+</div>
+<form class="flex flex-col md:flex-row gap-4 relative z-10" onsubmit="event.preventDefault();">
+<input class="flex-grow border border-outline-variant rounded-DEFAULT px-4 py-3 font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow bg-surface-bright placeholder:text-outline h-[48px]" placeholder="Örn: CGT2026001458" type="text"/>
+<button class="bg-secondary-container text-on-primary px-8 py-3 rounded-DEFAULT font-semibold flex items-center justify-center gap-2 hover:bg-opacity-90 transition-opacity h-[48px] whitespace-nowrap shadow-sm hover:shadow-md" type="submit">
+<span class="material-symbols-outlined text-sm font-bold">search</span>
+                    Gönderiyi Sorgula
+                </button>
+</form>
+</div>
+<!-- Recent Tracking & Help Section Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Recent Shipments -->
+<div class="lg:col-span-8">
+<h3 class="font-headline-md text-headline-md text-on-background mb-stack-md">Son Sorgulanan Gönderiler</h3>
+<div class="flex flex-col gap-4">
+<!-- Item 1: In Transit -->
+<div class="bg-white rounded-lg border border-outline-variant p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-sm transition-shadow group cursor-pointer border-l-4 border-l-surface-tint">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="font-body-md text-body-md font-bold text-on-background">CGT2026001458</span>
+<span class="bg-surface-container-high text-primary-container px-2 py-1 rounded-full font-status-label text-status-label flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+                                    Dağıtıma Çıktı
+                                </span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+<span>İstanbul</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+<span>Ankara</span>
+</div>
+</div>
+<div class="text-right md:text-right text-left w-full md:w-auto mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-none">
+<div class="text-on-surface-variant text-sm mb-1">Tahmini Teslimat</div>
+<div class="flex items-center md:justify-end gap-1 font-body-md text-body-md font-bold text-on-background">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+                                20 Ağustos 2026
+                            </div>
+</div>
+</div>
+<!-- Item 2: Transfer -->
+<div class="bg-white rounded-lg border border-outline-variant p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-sm transition-shadow group cursor-pointer border-l-4 border-l-secondary-container">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="font-body-md text-body-md font-bold text-on-background">CGT2026001287</span>
+<span class="bg-[#fff3e0] text-[#e65100] px-2 py-1 rounded-full font-status-label text-status-label flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">swap_horiz</span>
+                                    Transfer Merkezinde
+                                </span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+<span>İzmir</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+<span>Bursa</span>
+</div>
+</div>
+<div class="text-right md:text-right text-left w-full md:w-auto mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-none">
+<div class="text-on-surface-variant text-sm mb-1">Son İşlem Tarihi</div>
+<div class="flex items-center md:justify-end gap-1 font-body-md text-body-md font-bold text-on-background">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                                18 Ağustos 2026
+                            </div>
+</div>
+</div>
+<!-- Item 3: Delivered -->
+<div class="bg-white rounded-lg border border-outline-variant p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-sm transition-shadow group cursor-pointer border-l-4 border-l-[#4caf50]">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="font-body-md text-body-md font-bold text-on-background">CGT2026000974</span>
+<span class="bg-[#e8f5e9] text-[#2e7d32] px-2 py-1 rounded-full font-status-label text-status-label flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                    Teslim Edildi
+                                </span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+<span>Antalya</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+<span>İstanbul</span>
+</div>
+</div>
+<div class="text-right md:text-right text-left w-full md:w-auto mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-none">
+<div class="text-on-surface-variant text-sm mb-1">Teslim Tarihi</div>
+<div class="flex items-center md:justify-end gap-1 font-body-md text-body-md font-bold text-[#2e7d32]">
+<span class="material-symbols-outlined text-sm">done_all</span>
+                                15 Ağustos 2026
+                            </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Help Card -->
+<div class="lg:col-span-4 mt-stack-lg lg:mt-0 lg:pt-14">
+<div class="bg-surface-container-low rounded-xl p-6 relative overflow-hidden h-full flex flex-col border border-surface-container shadow-sm">
+<!-- Decorative large icon -->
+<div class="absolute -right-4 -top-4 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">help</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary-container mb-4 relative z-10 shadow-sm">
+<span class="material-symbols-outlined text-lg">lightbulb</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-background mb-3 relative z-10">Takip numaramı nereden bulabilirim?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 relative z-10 flex-grow">
+                        Gönderi oluşturulduğunda size SMS veya e-posta ile iletilen <strong class="text-on-background font-semibold">13 haneli alfabetik ve sayısal karakterlerden</strong> oluşan kodu kullanabilirsiniz.
+                    </p>
+<a class="text-primary font-bold text-sm flex items-center gap-1 hover:underline relative z-10 mt-auto" href="#">
+                        Destek Merkezi'ne Git
+                        <span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary-container dark:bg-primary font-body-md text-body-md full-width bottom flex flex-col md:flex-row justify-between items-center px-gutter py-8 w-full mt-auto">
+<div class="text-surface-bright font-body-md text-body-md mb-4 md:mb-0 opacity-90">
+            © 2024 CargoTrack Lojistik A.Ş. Tüm hakları saklıdır.
+        </div>
+<div class="flex flex-wrap gap-4 md:gap-6 justify-center">
+<a class="text-on-primary-container dark:text-primary-fixed-dim opacity-80 hover:opacity-100 hover:text-secondary-container dark:hover:text-secondary-fixed transition-colors" href="#">Gizlilik Politikası</a>
+<a class="text-on-primary-container dark:text-primary-fixed-dim opacity-80 hover:opacity-100 hover:text-secondary-container dark:hover:text-secondary-fixed transition-colors" href="#">Kullanım Şartları</a>
+<a class="text-on-primary-container dark:text-primary-fixed-dim opacity-80 hover:opacity-100 hover:text-secondary-container dark:hover:text-secondary-fixed transition-colors" href="#">KVKK Aydınlatma Metni</a>
+<a class="text-on-primary-container dark:text-primary-fixed-dim opacity-80 hover:opacity-100 hover:text-secondary-container dark:hover:text-secondary-fixed transition-colors" href="#">Sıkça Sorulan Sorular</a>
+</div>
+</footer>
+</body></html>

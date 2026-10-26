@@ -14,6 +14,7 @@
         <th>Ad Soyad</th>
         <th>Email</th>
         <th>Kullanıcı Adı</th>
+        <th>Roller</th>
         <th>İşlemler</th>
     </tr>
 
@@ -26,7 +27,15 @@
             <td>@item.Email</td>
             <td>@item.UserName</td>
             <td>
-                <a href="#" class="btn btn-dark">Rol Ata</a>
+                @foreach(var role in item.Roles)
+                {
+                    <span class="badge bg-info me-1">@role</span>
+                    <br />
+                }
+                
+            </td>
+            <td>
+                <a href="/Admin/RoleAssign/AssignRole/@item.Id" class="btn btn-dark">Rol Ata</a>
             </td>
         </tr>
     }

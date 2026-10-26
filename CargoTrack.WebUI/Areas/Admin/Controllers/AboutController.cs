@@ -1,11 +1,13 @@
 ﻿using CargoTrack.Business.Services.Abouts;
 using CargoTrack.DTO.DTOs.AboutDtos;
 using CargoTrack.WebUI.Consts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CargoTrack.WebUI.Areas.Admin.Controllers
 {
     [Area(Area.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public class AboutController(IAboutService _aboutService) : Controller
     {
         public async Task<IActionResult> Index()
