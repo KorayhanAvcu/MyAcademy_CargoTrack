@@ -1,4 +1,5 @@
 ﻿using CargoTrack.Business;
+using CargoTrack.Business.Mappings;
 using CargoTrack.Business.Services.Abouts;
 using CargoTrack.Business.Services.Branches;
 using CargoTrack.Business.Services.Cities;
@@ -19,6 +20,14 @@ using CargoTrack.DataAccess.Repositories.Deliveries;
 using CargoTrack.DataAccess.Repositories.DeliveryExceptions;
 using CargoTrack.DataAccess.Repositories.Employees;
 using CargoTrack.DataAccess.Repositories.TransferCenters;
+using CargoTrack.Business.Services.AuditLogs;
+using CargoTrack.Business.Services.CargoPrices;
+using CargoTrack.Business.Services.CargoPricing;
+using CargoTrack.Business.Services.Cargos;
+using CargoTrack.Business.Services.Dashboards;
+using CargoTrack.Business.Services.Employees;
+using CargoTrack.Business.Services.TransferCenters;
+using CargoTrack.Business.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,7 +91,20 @@ builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IAboutService, AboutService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<ICityService, CityService>();
-// ➕ Yeni servisler buraya (ICargoService, ICargoPricingService...)
+builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+builder.Services.AddScoped<ICargoPricingService, CargoPricingService>();
+builder.Services.AddScoped<ICargoService, CargoService>();
+builder.Services.AddScoped<ITransferCenterService, TransferCenterService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ICargoPriceService, CargoPriceService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+// =====================================================
+// MAPSTER
+// =====================================================
+
+MapsterConfig.Configure();
 
 builder.Services.AddControllersWithViews();
 

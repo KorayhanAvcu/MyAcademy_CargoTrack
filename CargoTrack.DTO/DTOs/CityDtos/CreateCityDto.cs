@@ -9,6 +9,6 @@ namespace CargoTrack.DTO.DTOs.CityDtos
 {
     public class CreateCityDto
     {
-        public IList<BranchDto> Branches { get; set; }
+        public string Name { get; set; }
     }
 }

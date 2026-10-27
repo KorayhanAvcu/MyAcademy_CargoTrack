@@ -1,13 +1,10 @@
-﻿using CargoTrack.DTO.DTOs.UserDtos;
-using CargoTrack.Entity.Entities;
-using CargoTrack.WebUI.Consts;
-using Mapster;
-using Microsoft.AspNetCore.Identity;
+﻿using CargoTrack.Business.Services.Users;
+using CargoTrack.DTO.DTOs.UserDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CargoTrack.WebUI.Controllers
 {
-    public class RegisterController(UserManager<AppUser> _userManager) : Controller
+    public class RegisterController(IUserService _userService) : Controller
     {
         [HttpGet]
         public IActionResult Signup()
@@ -23,12 +20,7 @@ namespace CargoTrack.WebUI.Controllers
                 return View(registerUserDto);
             }
 
-            var user = registerUserDto.Adapt<AppUser>();
-
-            var result = await _userManager.CreateAsync(
-                user,
-                registerUserDto.Password
-            );
+            var result = await _userService.RegisterAsync(registerUserDto);
 
             if (!result.Succeeded)
             {
@@ -39,7 +31,6 @@ namespace CargoTrack.WebUI.Controllers
 
                 return View(registerUserDto);
             }
-            await _userManager.AddToRoleAsync(user, Roles.User);
             return RedirectToAction("Index", "Login");
         }
     }
