@@ -43,7 +43,6 @@ namespace CargoTrack.Business.Services.Dashboards
                 ActiveBranchCount = await _branchRepository.CountAsync(),
                 EmployeeCount = await _employeeRepository.CountAsync(),
 
-                // Kargo olmayan günler de grafikte 0 olarak görünsün
                 Last7Days = Enumerable.Range(0, 7)
                     .Select(i => weekStart.AddDays(i))
                     .Select(day => new DailyCountDto
@@ -58,7 +57,6 @@ namespace CargoTrack.Business.Services.Dashboards
                     .Select(g => new StatusCountDto { Status = g.Key, Count = g.Count() })
                     .ToListAsync(),
 
-                // En yoğun 5 şube: çıkan + gelen kargo toplamı
                 TopBranches = await _branchRepository.GetQueryable()
                     .Select(b => new BranchCountDto
                     {
@@ -123,7 +121,6 @@ namespace CargoTrack.Business.Services.Dashboards
                     .ProjectToType<ResultCargoDto>()
                     .ToListAsync(),
 
-                // Yetki ve teslimat kodu kuralları tek yerde kalsın diye CargoService'ten alınır
                 LastCargo = lastCargoId is null
                     ? null
                     : await _cargoService.GetDetailAsync(lastCargoId.Value, userId, isAdmin: false, managerBranchId: null)

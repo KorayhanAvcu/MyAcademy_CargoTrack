@@ -45,7 +45,6 @@ namespace CargoTrack.Business.Services.CargoPrices
             await _cargoPriceRepository.DeleteAsync(price);
         }
 
-        // Aynı tip + mesafe için desi aralıkları çakışmamalı, yoksa fiyat belirsiz olur
         private async Task EnsureNoOverlapAsync(DeliveryType deliveryType, DistanceType distanceType,
                                                 double minDesi, double maxDesi, Guid? excludeId)
         {

@@ -1,0 +1,16 @@
+﻿@model UserDashboardDto
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+    <vc:stat-card title="Aktif Kargolarım" value="@Model.ActiveCargoCount" color="primary" />
+    <vc:stat-card title="Bana Gelen" value="@Model.IncomingActiveCount" color="dark" />
+    <vc:stat-card title="Gönderdiğim" value="@Model.OutgoingActiveCount" color="dark" />
+    <vc:stat-card title="Teslim Edilen" value="@Model.DeliveredCount" color="success" />
+</div>
+
+<h3 class="text-xl font-semibold text-primary-container mb-3">Aktif Kargolar</h3>
+<vc:cargo-table cargos="Model.ActiveCargos" />
+
+@if (Model.LastCargo != null)
+{
+    <h3 class="text-xl font-semibold text-primary-container mt-8 mb-3">Son Kargonun Durumu</h3>
+    <vc:cargo-detail cargo="Model.LastCargo" />
+}

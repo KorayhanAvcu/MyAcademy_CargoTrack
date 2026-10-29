@@ -10,6 +10,5 @@ namespace CargoTrack.DataAccess.Repositories.Abouts
 {
     public interface IAboutRepository : IRepository<About>
     {
-
     }
 }

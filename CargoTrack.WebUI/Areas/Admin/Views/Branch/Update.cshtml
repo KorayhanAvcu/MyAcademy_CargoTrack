@@ -1,22 +1,27 @@
 ﻿@model UpdateBranchDto
-@{
-    ViewData["Title"] = "Update";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h1>Şube Güncelleme</h1>
-
-<form method="post">
+@{ ViewData["Title"] = "Şube Güncelle"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Şube Güncelle</h2>
+    </div>
+</div>
+<form method="post" class="card max-w-md">
     <input type="hidden" asp-for="Id" />
-    <label>Şube İsmi</label>
-    <input type="text" asp-for="Name" class="form-control" />
-    <span class="text-danger" asp-validation-for="Name"></span>
-    <br />
-    <label>Şehir</label>
-    <select asp-for="CityId" class="form-control" asp-items="ViewBag.Cities">
-        <option disabled selected value="">Şehir Seçiniz</option>
-    </select>
-    <br />
-    <button class="btn btn-dark">Güncelle</button>
-
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="mb-4">
+        <label class="label">Şube Adı</label>
+        <input asp-for="Name" class="input" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div class="mb-6">
+        <label class="label">Şehir</label>
+        <select asp-for="CityId" asp-items="(List<SelectListItem>)ViewBag.Cities" class="input">
+            <option value="">Şehir seçiniz</option>
+        </select>
+        <span asp-validation-for="CityId"></span>
+    </div>
+    <div class="flex gap-2">
+        <a asp-action="Index" class="btn-outline">Vazgeç</a>
+        <button class="btn-accent">Kaydet</button>
+    </div>
 </form>

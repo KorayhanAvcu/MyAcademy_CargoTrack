@@ -12,6 +12,7 @@ namespace CargoTrack.Business.Validators.Cargos
                 .NotEqual(x => x.SenderId).WithMessage("Gönderici ve alıcı aynı kişi olamaz.");
             RuleFor(x => x.OriginBranchId).NotEmpty().WithMessage("Çıkış şubesi seçilmelidir.");
             RuleFor(x => x.DestinationBranchId).NotEmpty().WithMessage("Varış şubesi seçilmelidir.");
+            RuleFor(x => x.ReceiverAddressId).NotEmpty().WithMessage("Alıcının teslimat adresi seçilmelidir.");
             RuleFor(x => x.Weight).GreaterThan(0).WithMessage("Ağırlık 0'dan büyük olmalıdır.");
             RuleFor(x => x.Width).GreaterThan(0).WithMessage("En 0'dan büyük olmalıdır.");
             RuleFor(x => x.Length).GreaterThan(0).WithMessage("Boy 0'dan büyük olmalıdır.");

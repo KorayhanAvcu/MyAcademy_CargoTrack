@@ -9,14 +9,12 @@ namespace CargoTrack.Business.Mappings
     {
         public static void Configure()
         {
-            // Konum ya şube ya da transfer merkezidir
             TypeAdapterConfig<CargoMovement, CargoMovementDto>.NewConfig()
                 .Map(dest => dest.LocationName,
                      src => src.Branch != null ? src.Branch.Name
                           : src.TransferCenter != null ? src.TransferCenter.Name
                           : null);
 
-            // Herkese açık takip: isimler maskelenir, en yeni hareket en üstte
             TypeAdapterConfig<Cargo, CargoTrackingDto>.NewConfig()
                 .Map(dest => dest.Movements,
                      src => src.Movements.OrderByDescending(m => m.MovementDate))

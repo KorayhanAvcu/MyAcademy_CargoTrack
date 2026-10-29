@@ -1,0 +1,23 @@
+﻿@model UpdateEmployeeDto
+@{ ViewData["Title"] = "Personel Güncelle"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Personel Güncelle</h2>
+    </div>
+</div>
+<form method="post" class="card max-w-md">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All"></div>
+    <div class="mb-4">
+        <label class="label">Şube</label>
+        <select asp-for="BranchId" asp-items="(List<SelectListItem>)ViewBag.Branches" class="input"></select>
+    </div>
+    <div class="mb-6">
+        <label class="label">Pozisyon</label>
+        <input asp-for="Position" class="input" />
+    </div>
+    <div class="flex gap-2">
+        <a asp-action="Index" class="btn-outline">Vazgeç</a>
+        <button class="btn-accent">Kaydet</button>
+    </div>
+</form>

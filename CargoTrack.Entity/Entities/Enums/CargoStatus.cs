@@ -1,15 +1,17 @@
-﻿namespace CargoTrack.Entity.Entities.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CargoTrack.Entity.Entities.Enums
 {
     public enum CargoStatus
     {
-        Created = 1,             // Oluşturuldu
-        AtOriginBranch = 2,      // Gönderici Şubesinde
-        InTransferCenter = 3,    // Transfer Merkezinde
-        AtDestinationBranch = 4, // Varış Şubesinde
-        OutForDelivery = 5,      // Dağıtıma Çıktı
-        Delivered = 6,           // Teslim Edildi
-        DeliveryFailed = 7,      // Teslim Edilemedi
-        ReturnInProgress = 8,    // İade Sürecinde
-        ReturnedToSender = 9     // Göndericiye İade Edildi
+        [Display(Name = "Oluşturuldu")] Created = 1,
+        [Display(Name = "Gönderici Şubesinde")] AtOriginBranch = 2,
+        [Display(Name = "Transfer Merkezinde")] InTransferCenter = 3,
+        [Display(Name = "Varış Şubesinde")] AtDestinationBranch = 4,
+        [Display(Name = "Dağıtıma Çıktı")] OutForDelivery = 5,
+        [Display(Name = "Teslim Edildi")] Delivered = 6,
+        [Display(Name = "Teslim Edilemedi")] DeliveryFailed = 7,
+        [Display(Name = "İade Sürecinde")] ReturnInProgress = 8,
+        [Display(Name = "Göndericiye İade Edildi")] ReturnedToSender = 9
     }
 }

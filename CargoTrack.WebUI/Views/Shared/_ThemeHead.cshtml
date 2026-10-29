@@ -1,0 +1,66 @@
+﻿<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    "surface-container-high": "#dce9ff",
+                    "on-surface-variant": "#43474e",
+                    "outline": "#74777e",
+                    "secondary-fixed": "#ffdcc3",
+                    "secondary": "#904d00",
+                    "background": "#f8f9ff",
+                    "error": "#ba1a1a",
+                    "on-background": "#0b1c30",
+                    "surface-bright": "#f8f9ff",
+                    "primary-fixed-dim": "#afc8ee",
+                    "primary-fixed": "#d3e3ff",
+                    "primary-container": "#001e3c",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary": "#00040c",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c4c6ce",
+                    "surface-container": "#e5eeff",
+                    "on-primary-container": "#6f87aa",
+                    "on-surface": "#0b1c30",
+                    "surface-container-low": "#eff4ff",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#486081",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#f8f9ff",
+                    "secondary-container": "#fd8b00",
+                    "on-secondary": "#ffffff"
+                },
+                fontFamily: { sans: ["Hanken Grotesk", "sans-serif"] }
+            }
+        }
+    }
+</script>
+<style type="text/tailwindcss">
+    @@layer components {
+        .card { @@apply bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-6; }
+        .page-title { @@apply text-[28px] leading-9 font-semibold text-primary-container; }
+        .label { @@apply block text-sm font-semibold text-on-surface-variant mb-1; }
+        .input { @@apply w-full border border-outline-variant rounded-lg px-3 py-2 bg-white text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container; }
+        .btn { @@apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-colors text-sm; }
+        .btn-primary { @@apply btn bg-primary-container text-on-primary hover:bg-primary; }
+        .btn-accent { @@apply btn bg-secondary-container text-white hover:opacity-90 shadow-sm; }
+        .btn-outline { @@apply btn bg-surface-container-high text-primary-container border border-primary-container/20 hover:bg-surface-container-highest; }
+        .btn-danger { @@apply btn bg-error text-white hover:opacity-90; }
+        .btn-sm { @@apply px-3 py-1.5 text-xs; }
+        .tbl { @@apply w-full text-left text-sm; }
+        .tbl th { @@apply px-4 py-3 bg-surface-container-low text-xs font-bold uppercase tracking-wider text-outline; }
+        .tbl td { @@apply px-4 py-3 border-t border-outline-variant/30 align-middle; }
+        .tbl tbody tr { @@apply hover:bg-surface-container-low/60; }
+        .validation-summary-errors ul { @@apply bg-error-container text-on-error-container rounded-lg px-4 py-3 mb-4 list-disc list-inside text-sm; }
+        .field-validation-error { @@apply text-error text-xs; }
+    }
+</style>
+<style>
+    body { font-family: 'Hanken Grotesk', sans-serif; background-color: #f8f9ff; color: #0b1c30; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .filled-icon { font-variation-settings: 'FILL' 1; }
+</style>

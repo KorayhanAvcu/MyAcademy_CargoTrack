@@ -1,15 +1,15 @@
-﻿using CargoTrack.WebUI.Consts;
-using Microsoft.AspNetCore.Authorization;
+﻿using CargoTrack.Business.Services.Employees;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CargoTrack.WebUI.Areas.Manager.Controllers
 {
-    [Area(Area.Manager)]
-    [Authorize(Roles = $"{Roles.Manager},{Roles.Admin}")]
-    public class DashboardController : Controller
+    public class DashboardController(IEmployeeService employeeService) : ManagerBaseController(employeeService)
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var employee = await GetCurrentEmployeeAsync();
+            ViewBag.BranchId = employee.BranchId;
+            ViewBag.BranchName = $"{employee.BranchCityName} / {employee.BranchName}";
             return View();
         }
     }

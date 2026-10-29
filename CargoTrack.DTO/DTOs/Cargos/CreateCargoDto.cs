@@ -2,13 +2,13 @@
 
 namespace CargoTrack.DTO.DTOs.Cargos
 {
-    // Fiyat, desi, takip no, tarih ve durum servis tarafından hesaplanır; formdan alınmaz
     public class CreateCargoDto
     {
         public Guid SenderId { get; set; }
         public Guid ReceiverId { get; set; }
         public Guid OriginBranchId { get; set; }
         public Guid DestinationBranchId { get; set; }
+        public Guid ReceiverAddressId { get; set; }
 
         public double Weight { get; set; }
         public double Width { get; set; }

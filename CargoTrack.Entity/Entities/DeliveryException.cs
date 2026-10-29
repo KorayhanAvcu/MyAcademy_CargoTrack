@@ -9,10 +9,9 @@ namespace CargoTrack.Entity.Entities
         public Guid EmployeeId { get; set; }
         public DeliveryExceptionReason Reason { get; set; }
         public string? Description { get; set; }
-        public int AttemptNumber { get; set; }   // 1, 2, 3...
+        public int AttemptNumber { get; set; }
         public DateTime AttemptDate { get; set; }
 
-        //Navigation Properties
         public virtual Cargo Cargo { get; set; }
         public virtual Employee Employee { get; set; }
     }

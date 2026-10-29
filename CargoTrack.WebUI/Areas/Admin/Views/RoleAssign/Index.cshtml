@@ -1,45 +1,42 @@
 ﻿@model List<ResultUserDto>
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    int count = 0;
-}
-
-<h3>Kullanıcı Listesi</h3>
-
-<table class="table table-bordered table-hover">
-
-    <tr>
-        <th>#</th>
-        <th>Ad Soyad</th>
-        <th>Email</th>
-        <th>Kullanıcı Adı</th>
-        <th>Roller</th>
-        <th>İşlemler</th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        count++;
-        <tr>
-            <th>@count</th>
-            <td>@item.FullName</td>
-            <td>@item.Email</td>
-            <td>@item.UserName</td>
-            <td>
-                @foreach(var role in item.Roles)
-                {
-                    <span class="badge bg-info me-1">@role</span>
-                    <br />
-                }
-                
-            </td>
-            <td>
-                <a href="/Admin/RoleAssign/AssignRole/@item.Id" class="btn btn-dark">Rol Ata</a>
-            </td>
-        </tr>
-    }
-
-
-
-</table>
+@{ ViewData["Title"] = "Kullanıcı / Rol"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Kullanıcılar ve Roller</h2>
+        <p class="text-on-surface-variant">Kullanıcılara Admin, Manager veya User rolü atayın</p>
+    </div>
+</div>
+<div class="card !p-0 overflow-x-auto">
+    <table class="tbl">
+        <thead><tr><th>Ad Soyad</th><th>E-posta</th><th>Kullanıcı Adı</th><th>Roller</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="font-semibold">@item.FullName</td>
+                    <td>@item.Email</td>
+                    <td>@item.UserName</td>
+                    <td>
+                        <div class="flex flex-wrap gap-1">
+                            @foreach (var role in item.Roles ?? new List<string>())
+                            {
+                                var css = role switch
+                                {
+                                    "Admin" => "bg-primary-container text-white",
+                                    "Manager" => "bg-secondary-container text-white",
+                                    _ => "bg-surface-container-high text-primary-container"
+                                };
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold @css">@role</span>
+                            }
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <a asp-action="AssignRole" asp-route-id="@item.Id" class="btn-outline btn-sm">
+                            <span class="material-symbols-outlined text-[16px]">manage_accounts</span> Rol Ata
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

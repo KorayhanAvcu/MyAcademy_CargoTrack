@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Sayfa bulunamadı";
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+<div class="max-w-xl mx-auto text-center py-16">
+    <div class="w-20 h-20 rounded-full bg-surface-container-high text-primary-container flex items-center justify-center mx-auto mb-6">
+        <span class="material-symbols-outlined text-[40px]">travel_explore</span>
+    </div>
+    <h1 class="text-[40px] leading-[48px] font-bold text-primary-container mb-2">@ViewBag.Code</h1>
+    <p class="text-lg text-on-surface-variant mb-8">Aradığınız sayfa bulunamadı.</p>
+    <a href="/" class="bg-secondary-container text-white px-8 py-3 rounded font-semibold inline-flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">home</span> Ana sayfaya dön
+    </a>
+</div>

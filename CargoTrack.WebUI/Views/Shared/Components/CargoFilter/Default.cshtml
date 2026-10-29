@@ -1,0 +1,43 @@
+﻿@model CargoFilterDto
+@{
+    var statuses = (List<SelectListItem>)ViewBag.Statuses;
+    var directions = (List<SelectListItem>)ViewBag.Directions;
+    var showDirection = (bool)ViewBag.ShowDirection;
+}
+<form method="get" class="card !p-4 mb-6 grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+    <div class="md:col-span-3">
+        <label class="label">Takip No</label>
+        <input name="Search" value="@Model.Search" class="input" placeholder="MYC-2026-..." />
+    </div>
+    <div class="md:col-span-2">
+        <label class="label">Durum</label>
+        <select name="Status" class="input" asp-items="statuses">
+            <option value="">Tümü</option>
+        </select>
+    </div>
+    @if (showDirection)
+    {
+        <div class="md:col-span-2">
+            <label class="label">Yön</label>
+            <select name="Direction" class="input" asp-items="directions">
+                <option value="">Tümü</option>
+            </select>
+        </div>
+    }
+    <div class="md:col-span-2">
+        <label class="label">Başlangıç</label>
+        <input type="date" name="StartDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" class="input" />
+    </div>
+    <div class="md:col-span-2">
+        <label class="label">Bitiş</label>
+        <input type="date" name="EndDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" class="input" />
+    </div>
+    <div class="md:col-span-1 flex flex-col gap-1 text-sm">
+        <label class="flex items-center gap-2"><input type="checkbox" name="OnlyActive" value="true" class="rounded" checked="@Model.OnlyActive" /> Aktif</label>
+        <label class="flex items-center gap-2"><input type="checkbox" name="OnlyDelayed" value="true" class="rounded" checked="@Model.OnlyDelayed" /> Geciken</label>
+    </div>
+    <div class="md:col-span-12 flex gap-2 justify-end">
+        <a href="@Context.Request.Path" class="btn-outline">Temizle</a>
+        <button class="btn-accent"><span class="material-symbols-outlined text-[18px]">filter_alt</span> Filtrele</button>
+    </div>
+</form>

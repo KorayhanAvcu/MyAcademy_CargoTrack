@@ -1,8 +1,10 @@
-﻿namespace CargoTrack.Entity.Entities.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CargoTrack.Entity.Entities.Enums
 {
     public enum DeliveryType
     {
-        Standard = 1,
-        Express = 2
+        [Display(Name = "Standart Teslimat")] Standard = 1,
+        [Display(Name = "Hızlı Teslimat")] Express = 2
     }
 }

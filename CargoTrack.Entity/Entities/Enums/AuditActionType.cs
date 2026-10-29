@@ -1,10 +1,12 @@
-﻿namespace CargoTrack.Entity.Entities.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CargoTrack.Entity.Entities.Enums
 {
     public enum AuditActionType
     {
-        Create = 1,
-        Update = 2,
-        Delete = 3,
-        StatusChange = 4
+        [Display(Name = "Ekleme")] Create = 1,
+        [Display(Name = "Güncelleme")] Update = 2,
+        [Display(Name = "Silme")] Delete = 3,
+        [Display(Name = "Durum Değişikliği")] StatusChange = 4
     }
 }

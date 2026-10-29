@@ -1,0 +1,15 @@
+﻿@{ ViewData["Title"] = "Sorunlu Kargolar"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Sorunlu Kargolar</h2>
+        <p class="text-on-surface-variant">Teslim edilemeyen, iade sürecindeki ve geciken gönderiler</p>
+    </div>
+</div>
+<h3 class="text-lg font-semibold text-error mb-3 flex items-center gap-2"><span class="material-symbols-outlined">error</span> Teslim Edilemeyenler</h3>
+<vc:cargo-table cargos="(List<ResultCargoDto>)ViewBag.Failed" />
+
+<h3 class="text-lg font-semibold text-[#e65100] mt-8 mb-3 flex items-center gap-2"><span class="material-symbols-outlined">undo</span> İade Sürecindekiler</h3>
+<vc:cargo-table cargos="(List<ResultCargoDto>)ViewBag.Returning" />
+
+<h3 class="text-lg font-semibold text-primary-container mt-8 mb-3 flex items-center gap-2"><span class="material-symbols-outlined">schedule</span> Gecikenler</h3>
+<vc:cargo-table cargos="(List<ResultCargoDto>)ViewBag.Delayed" />

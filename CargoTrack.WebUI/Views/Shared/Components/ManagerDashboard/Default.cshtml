@@ -1,0 +1,30 @@
+﻿@model ManagerDashboardDto
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+    <vc:stat-card title="Bugün Gelen" value="@Model.TodayIncomingCount" color="dark" />
+    <vc:stat-card title="Bugün Çıkan" value="@Model.TodayOutgoingCount" color="dark" />
+    <vc:stat-card title="Dağıtımda" value="@Model.OutForDeliveryCount" color="primary" />
+    <vc:stat-card title="Bugün Teslim" value="@Model.DeliveredTodayCount" color="success" />
+    <vc:stat-card title="Geciken" value="@Model.DelayedCount" color="danger" />
+    <vc:stat-card title="Sorunlu" value="@Model.ProblematicCount" color="warning" />
+</div>
+<div class="card !p-0 overflow-x-auto">
+    <h3 class="font-semibold text-primary-container px-6 pt-6 pb-3">Son Hareketler</h3>
+    <table class="tbl">
+        <thead><tr><th>Takip No</th><th>Durum</th><th>Konum</th><th>Tarih</th></tr></thead>
+        <tbody>
+            @foreach (var m in Model.RecentMovements)
+            {
+                <tr>
+                    <td class="font-bold text-primary-container">@m.CargoTrackCode</td>
+                    <td>@await Component.InvokeAsync("StatusBadge", new { status = m.NewStatus })</td>
+                    <td>@(m.BranchName ?? m.TransferCenterName)</td>
+                    <td>@m.MovementDate.ToString("dd.MM.yyyy HH:mm")</td>
+                </tr>
+            }
+            @if (!Model.RecentMovements.Any())
+            {
+                <tr><td colspan="4" class="text-center text-outline py-8">Henüz hareket yok.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

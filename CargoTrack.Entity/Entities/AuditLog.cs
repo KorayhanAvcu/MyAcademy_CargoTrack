@@ -8,11 +8,10 @@ namespace CargoTrack.Entity.Entities
         public Guid? UserId { get; set; }
         public string? UserName { get; set; }
         public AuditActionType ActionType { get; set; }
-        public string EntityName { get; set; }   // "Cargo"
+        public string EntityName { get; set; }
         public Guid EntityId { get; set; }
         public string? OldValue { get; set; }
         public string? NewValue { get; set; }
         public string? Description { get; set; }
-        
     }
 }

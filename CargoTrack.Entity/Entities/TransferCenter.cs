@@ -7,9 +7,7 @@ namespace CargoTrack.Entity.Entities
         public string Name { get; set; }
         public Guid CityId { get; set; }
 
-        //Navigation Properties
         public virtual City City { get; set; }
         public virtual IList<CargoMovement> Movements { get; set; }
-        
     }
 }

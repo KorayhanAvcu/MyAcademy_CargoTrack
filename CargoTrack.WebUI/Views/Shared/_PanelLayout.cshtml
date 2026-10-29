@@ -1,0 +1,64 @@
+﻿@{
+    var roleLabel = User.IsInRole("Admin") ? "Sistem Yöneticisi"
+                  : User.IsInRole("Manager") ? "Şube Yöneticisi"
+                  : "Müşteri";
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CargoTrack</title>
+    <partial name="_ThemeHead" />
+</head>
+<body class="min-h-screen bg-background">
+    <div class="flex min-h-screen">
+        <aside class="w-64 shrink-0 bg-primary-container text-on-primary hidden md:flex flex-col">
+            <a href="/" class="flex items-center gap-2 px-6 py-5 border-b border-white/10">
+                <span class="material-symbols-outlined filled-icon text-secondary-container text-3xl">local_shipping</span>
+                <span class="text-xl font-bold">CargoTrack</span>
+            </a>
+            <div class="flex-1 overflow-y-auto py-4">
+                <vc:sidebar />
+            </div>
+            <div class="px-6 py-4 border-t border-white/10 text-sm">
+                <div class="font-semibold">@User.Identity?.Name</div>
+                <div class="text-primary-fixed-dim text-xs mb-3">@roleLabel</div>
+                <a href="/Login/Logout" class="flex items-center gap-2 text-primary-fixed-dim hover:text-white">
+                    <span class="material-symbols-outlined text-[18px]">logout</span> Çıkış Yap
+                </a>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col min-w-0">
+            <header class="bg-surface border-b border-outline-variant shadow-sm px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-2 md:hidden">
+                    <span class="material-symbols-outlined filled-icon text-primary-container">local_shipping</span>
+                    <span class="font-bold">CargoTrack</span>
+                </div>
+                <h1 class="hidden md:block text-lg font-semibold text-primary-container">@ViewData["Title"]</h1>
+                <div class="flex items-center gap-4">
+                    <a href="/" class="text-on-surface-variant hover:text-primary flex items-center gap-1 text-sm">
+                        <span class="material-symbols-outlined text-[18px]">search</span> Kargo Takip
+                    </a>
+                    <a href="/Login/Logout" class="md:hidden text-on-surface-variant text-sm">Çıkış</a>
+                </div>
+            </header>
+            <main class="flex-1 p-4 md:p-8 w-full min-w-0">
+                <vc:alerts />
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $.validator.methods.number = function (value, element) {
+            return this.optional(element) || /^-?\d+([.,]\d+)?$/.test(value.trim());
+        };
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

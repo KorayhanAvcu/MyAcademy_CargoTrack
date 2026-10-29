@@ -1,0 +1,64 @@
+﻿@model PagedResultDto<ResultAuditLogDto>
+@{
+    ViewData["Title"] = "Audit Log";
+    var filter = (AuditLogFilterDto)ViewBag.Filter;
+}
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Audit Log</h2>
+        <p class="text-on-surface-variant">Sistemde yapılan tüm işlemlerin kaydı</p>
+    </div>
+</div>
+<form method="get" class="card !p-4 mb-6 grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+    <div class="md:col-span-3">
+        <label class="label">Ara</label>
+        <input name="Search" value="@filter.Search" class="input" placeholder="Kullanıcı veya açıklama" />
+    </div>
+    <div class="md:col-span-2">
+        <label class="label">İşlem</label>
+        <select name="ActionType" class="input">
+            <option value="">Tümü</option>
+            @foreach (var type in Enum.GetValues<AuditActionType>())
+            {
+                <option value="@type" selected="@(filter.ActionType == type)">@type.ToDisplayName()</option>
+            }
+        </select>
+    </div>
+    <div class="md:col-span-2">
+        <label class="label">Entity</label>
+        <input name="EntityName" value="@filter.EntityName" class="input" placeholder="Cargo..." />
+    </div>
+    <div class="md:col-span-2">
+        <label class="label">Başlangıç</label>
+        <input type="date" name="StartDate" value="@filter.StartDate?.ToString("yyyy-MM-dd")" class="input" />
+    </div>
+    <div class="md:col-span-2">
+        <label class="label">Bitiş</label>
+        <input type="date" name="EndDate" value="@filter.EndDate?.ToString("yyyy-MM-dd")" class="input" />
+    </div>
+    <div class="md:col-span-1"><button class="btn-accent w-full">Ara</button></div>
+</form>
+<div class="card !p-0 overflow-x-auto">
+    <table class="tbl">
+        <thead><tr><th>Tarih</th><th>Kullanıcı</th><th>İşlem</th><th>Entity</th><th>Eski</th><th>Yeni</th><th>Açıklama</th></tr></thead>
+        <tbody>
+            @foreach (var log in Model.Items)
+            {
+                <tr>
+                    <td class="whitespace-nowrap">@log.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@(log.UserName ?? "Sistem")</td>
+                    <td><span class="px-2 py-1 rounded-full bg-surface-container-high text-primary-container text-xs font-semibold whitespace-nowrap">@log.ActionType.ToDisplayName()</span></td>
+                    <td>@log.EntityName <span class="block text-[11px] text-outline">@log.EntityId</span></td>
+                    <td class="text-outline">@log.OldValue</td>
+                    <td class="font-semibold">@log.NewValue</td>
+                    <td>@log.Description</td>
+                </tr>
+            }
+            @if (!Model.Items.Any())
+            {
+                <tr><td colspan="7" class="text-center text-outline py-10">Kayıt bulunamadı.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
+<vc:pagination pagination="Model.ToPagination()" />

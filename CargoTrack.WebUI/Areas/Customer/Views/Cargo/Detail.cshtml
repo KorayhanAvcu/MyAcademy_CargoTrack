@@ -1,0 +1,4 @@
+﻿@model CargoDetailDto
+@{ ViewData["Title"] = Model.TrackCode; }
+<a asp-action="Index" class="btn-outline mb-6"><span class="material-symbols-outlined text-[18px]">arrow_back</span> Kargolarıma dön</a>
+<vc:cargo-detail cargo="Model" />

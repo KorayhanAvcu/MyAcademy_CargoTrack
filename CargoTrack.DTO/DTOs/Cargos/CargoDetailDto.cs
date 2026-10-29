@@ -1,8 +1,7 @@
-using CargoTrack.Entity.Entities.Enums;
+﻿using CargoTrack.Entity.Entities.Enums;
 
 namespace CargoTrack.DTO.DTOs.Cargos
 {
-    // Panellerdeki detay sayfası (Admin, ilgili Manager, kargonun sahibi User)
     public class CargoDetailDto
     {
         public Guid Id { get; set; }
@@ -23,7 +22,7 @@ namespace CargoTrack.DTO.DTOs.Cargos
         public decimal Price { get; set; }
 
         public int FailedAttemptCount { get; set; }
-        public string? DeliveryCode { get; set; }        // Sadece alıcıya gösterilir; servis diğerlerine null döner
+        public string? DeliveryCode { get; set; }
 
         public Guid SenderId { get; set; }
         public string SenderFirstName { get; set; }
@@ -38,6 +37,7 @@ namespace CargoTrack.DTO.DTOs.Cargos
         public Guid DestinationBranchId { get; set; }
         public string DestinationBranchName { get; set; }
         public string DestinationBranchCityName { get; set; }
+        public string? DeliveryAddress { get; set; }
 
         public List<CargoMovementDto> Movements { get; set; }
     }

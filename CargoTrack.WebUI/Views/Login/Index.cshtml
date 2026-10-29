@@ -1,18 +1,29 @@
 ﻿@model LoginUserDto
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Giriş Yap";
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
 }
-
-<h1>Giriş Sayfası</h1>
-
-<form method="post">
-    <label>Kullanıcı Adı</label>
-    <input type="text" asp-for="UserName" class="form-control" required />
-    <br />
-    <label>Şifre</label>
-    <input type="password" asp-for="Password" class="form-control" required />
-    <br />
-    <div class="text-danger" asp-validation-summary="All"></div>
-    <button class="btn btn-dark">Giriş Yap</button>
-</form>
+<div class="max-w-md mx-auto">
+    <div class="text-center mb-8">
+        <div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center text-primary-container mx-auto mb-4">
+            <span class="material-symbols-outlined">login</span>
+        </div>
+        <h1 class="font-headline-lg text-headline-lg text-primary-container">Giriş Yap</h1>
+        <p class="text-on-surface-variant">Kargolarınızı ve panelinizi görmek için giriş yapın.</p>
+    </div>
+    <form method="post" class="bg-white rounded-xl shadow-sm border border-outline-variant p-6 md:p-8">
+        <div asp-validation-summary="All" class="text-error text-sm mb-4"></div>
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-on-surface-variant mb-1">Kullanıcı Adı</label>
+            <input asp-for="UserName" required class="w-full border border-outline-variant rounded-lg px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary" />
+        </div>
+        <div class="mb-6">
+            <label class="block text-sm font-semibold text-on-surface-variant mb-1">Şifre</label>
+            <input asp-for="Password" type="password" required class="w-full border border-outline-variant rounded-lg px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary" />
+        </div>
+        <button class="w-full bg-secondary-container text-white py-3 rounded-lg font-semibold hover:opacity-90">Giriş Yap</button>
+        <p class="text-center text-sm text-on-surface-variant mt-6">
+            Hesabınız yok mu? <a href="/Register/Signup" class="text-primary-container font-bold hover:underline">Kayıt olun</a>
+        </p>
+    </form>
+</div>

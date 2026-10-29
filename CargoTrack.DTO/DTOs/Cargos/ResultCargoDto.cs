@@ -2,7 +2,6 @@
 
 namespace CargoTrack.DTO.DTOs.Cargos
 {
-    // Listeleme tabloları için. OriginBranchCityName gibi alanları Mapster flattening ile doldurur
     public class ResultCargoDto
     {
         public Guid Id { get; set; }

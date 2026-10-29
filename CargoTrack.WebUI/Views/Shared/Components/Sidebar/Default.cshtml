@@ -1,0 +1,10 @@
+﻿@model List<MenuItemViewModel>
+<nav class="flex flex-col gap-1 px-3">
+    @foreach (var item in Model)
+    {
+        <a href="@item.Url"
+           class="px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors @(item.IsActive ? "bg-secondary-container text-white" : "text-primary-fixed-dim hover:bg-white/10 hover:text-white")">
+            @item.Title
+        </a>
+    }
+</nav>

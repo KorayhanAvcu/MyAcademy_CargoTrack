@@ -1,24 +1,29 @@
 ﻿@model CreateAboutDto
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h1>Yeni Hakkımızda Oluştur</h1>
-
-<form method="post">
-    <label>Görsel Url</label>
-    <input type="text" asp-for="ImageUrl" class="form-control" />
-    <span class="text-danger" asp-validation-for="ImageUrl"></span>
-    <br />
-    <label>Başlık</label>
-    <input type="text" asp-for="Title" class="form-control" />
-    <span class="text-danger" asp-validation-for="Title"></span>
-    <br />
-    <label>Açıklama</label>
-    <input type="text" asp-for="Description" class="form-control" />
-    <span class="text-danger" asp-validation-for="Description"></span>
-    <br />
-    <button class="btn btn-dark">Kaydet</button>
-
+@{ ViewData["Title"] = "Yeni Hakkımızda İçeriği"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Yeni Hakkımızda İçeriği</h2>
+    </div>
+</div>
+<form method="post" class="card max-w-2xl">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="mb-4">
+        <label class="label">Görsel URL</label>
+        <input asp-for="ImageUrl" class="input" />
+        <span asp-validation-for="ImageUrl"></span>
+    </div>
+    <div class="mb-4">
+        <label class="label">Başlık</label>
+        <input asp-for="Title" class="input" />
+        <span asp-validation-for="Title"></span>
+    </div>
+    <div class="mb-6">
+        <label class="label">Açıklama</label>
+        <textarea asp-for="Description" class="input" rows="5"></textarea>
+        <span asp-validation-for="Description"></span>
+    </div>
+    <div class="flex gap-2">
+        <a asp-action="Index" class="btn-outline">Vazgeç</a>
+        <button class="btn-accent">Kaydet</button>
+    </div>
 </form>

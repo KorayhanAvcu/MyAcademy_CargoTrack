@@ -1,0 +1,61 @@
+﻿@model AdminDashboardDto
+@using System.Text.Json
+@{
+    var dayLabels = JsonSerializer.Serialize(Model.Last7Days.Select(d => d.Date.ToString("dd.MM")));
+    var dayCounts = JsonSerializer.Serialize(Model.Last7Days.Select(d => d.Count));
+    var statusLabels = JsonSerializer.Serialize(Model.StatusDistribution.Select(s => s.Status.ToDisplayName()));
+    var statusCounts = JsonSerializer.Serialize(Model.StatusDistribution.Select(s => s.Count));
+}
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+    <vc:stat-card title="Toplam Kargo" value="@Model.TotalCargoCount" color="dark" />
+    <vc:stat-card title="Aktif Kargo" value="@Model.ActiveCargoCount" color="primary" />
+    <vc:stat-card title="Geciken Kargo" value="@Model.DelayedCargoCount" color="danger" />
+    <vc:stat-card title="Teslimat Oranı" value="%@Model.DeliveryRate" color="success" />
+    <vc:stat-card title="Zamanında Teslimat" value="%@Model.OnTimeDeliveryRate" color="success" />
+    <vc:stat-card title="Aktif Şube" value="@Model.ActiveBranchCount" color="dark" />
+    <vc:stat-card title="Personel" value="@Model.EmployeeCount" color="dark" />
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="card lg:col-span-2 min-w-0">
+        <h3 class="font-semibold text-primary-container mb-4">Son 7 Günlük Kargo Trafiği</h3>
+        <div class="relative h-72"><canvas id="dailyChart"></canvas></div>
+    </div>
+    <div class="card min-w-0">
+        <h3 class="font-semibold text-primary-container mb-4">Durum Dağılımı</h3>
+        <div class="relative h-72"><canvas id="statusChart"></canvas></div>
+    </div>
+    <div class="card !p-0 lg:col-span-3 overflow-x-auto">
+        <h3 class="font-semibold text-primary-container px-6 pt-6 pb-3">En Yoğun 5 Şube</h3>
+        <table class="tbl">
+            <thead><tr><th>Şube</th><th class="text-right">Kargo (giden + gelen)</th></tr></thead>
+            <tbody>
+                @foreach (var b in Model.TopBranches)
+                {
+                    <tr><td>@b.BranchName</td><td class="text-right font-semibold">@b.Count</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+    new Chart(document.getElementById('dailyChart'), {
+        type: 'line',
+        data: {
+            labels: @Html.Raw(dayLabels),
+            datasets: [{ label: 'Kargo', data: @Html.Raw(dayCounts), tension: 0.3, borderColor: '#001e3c', backgroundColor: '#001e3c' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+    });
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: @Html.Raw(statusLabels),
+            datasets: [{ data: @Html.Raw(statusCounts),
+                backgroundColor: ['#001e3c', '#486081', '#fd8b00', '#6f87aa', '#904d00', '#2e7d32', '#ba1a1a', '#ffb77d', '#74777e'] }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+    });
+</script>

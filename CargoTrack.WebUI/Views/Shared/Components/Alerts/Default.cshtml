@@ -1,0 +1,15 @@
+﻿@model AlertViewModel
+@if (Model.Error != null)
+{
+    <div class="mb-6 flex items-center gap-3 bg-error-container text-on-error-container px-4 py-3 rounded-lg">
+        <span class="material-symbols-outlined">error</span>
+        <span>@Model.Error</span>
+    </div>
+}
+@if (Model.Success != null)
+{
+    <div class="mb-6 flex items-center gap-3 bg-[#e8f5e9] text-[#1b5e20] px-4 py-3 rounded-lg">
+        <span class="material-symbols-outlined">check_circle</span>
+        <span>@Model.Success</span>
+    </div>
+}

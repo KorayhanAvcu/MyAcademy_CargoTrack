@@ -63,9 +63,8 @@ namespace CargoTrack.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("CityId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -92,6 +91,8 @@ namespace CargoTrack.DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
 
                     b.HasIndex("UserId");
 
@@ -292,7 +293,11 @@ namespace CargoTrack.DataAccess.Migrations
                     b.Property<DateTime?>("DeliveredDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DeliveryAddress")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DeliveryCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DeliveryType")
@@ -326,6 +331,9 @@ namespace CargoTrack.DataAccess.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid?>("ReceiverAddressId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ReceiverId")
                         .HasColumnType("uniqueidentifier");
 
@@ -353,6 +361,8 @@ namespace CargoTrack.DataAccess.Migrations
                     b.HasIndex("DestinationBranchId");
 
                     b.HasIndex("OriginBranchId");
+
+                    b.HasIndex("ReceiverAddressId");
 
                     b.HasIndex("ReceiverId");
 
@@ -754,11 +764,19 @@ namespace CargoTrack.DataAccess.Migrations
 
             modelBuilder.Entity("CargoTrack.Entity.Entities.Address", b =>
                 {
+                    b.HasOne("CargoTrack.Entity.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("CargoTrack.Entity.Entities.AppUser", "User")
                         .WithMany("Addresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("City");
 
                     b.Navigation("User");
                 });
@@ -788,6 +806,11 @@ namespace CargoTrack.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CargoTrack.Entity.Entities.Address", "ReceiverAddress")
+                        .WithMany()
+                        .HasForeignKey("ReceiverAddressId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("CargoTrack.Entity.Entities.AppUser", "Receiver")
                         .WithMany("ReceivedCargos")
                         .HasForeignKey("ReceiverId")
@@ -805,6 +828,8 @@ namespace CargoTrack.DataAccess.Migrations
                     b.Navigation("OriginBranch");
 
                     b.Navigation("Receiver");
+
+                    b.Navigation("ReceiverAddress");
 
                     b.Navigation("Sender");
                 });

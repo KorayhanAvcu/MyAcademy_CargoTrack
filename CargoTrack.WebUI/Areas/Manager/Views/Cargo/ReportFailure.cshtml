@@ -1,0 +1,28 @@
+﻿@model ReportDeliveryFailureDto
+@{ ViewData["Title"] = "Teslim Edilemedi"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Teslim Edilemedi</h2>
+        <p class="text-on-surface-variant">Başarısız teslimat denemesini kaydedin</p>
+    </div>
+</div>
+<form method="post" class="card max-w-md">
+    <input type="hidden" asp-for="CargoId" />
+    <div asp-validation-summary="All"></div>
+    <div class="mb-4">
+        <label class="label">Neden</label>
+        <select asp-for="Reason" asp-items="Html.GetEnumSelectList<DeliveryExceptionReason>()" class="input"></select>
+    </div>
+    <div class="mb-4">
+        <label class="label">Açıklama</label>
+        <textarea asp-for="Description" class="input" rows="3"></textarea>
+    </div>
+    <div class="flex items-center gap-2 bg-[#fff3e0] text-[#e65100] rounded-lg px-4 py-3 text-sm mb-6">
+        <span class="material-symbols-outlined text-[18px]">info</span>
+        3. başarısız denemede kargo otomatik olarak iade sürecine alınır.
+    </div>
+    <div class="flex gap-2">
+        <a asp-action="Detail" asp-route-id="@Model.CargoId" class="btn-outline">Vazgeç</a>
+        <button class="btn-danger">Kaydet</button>
+    </div>
+</form>

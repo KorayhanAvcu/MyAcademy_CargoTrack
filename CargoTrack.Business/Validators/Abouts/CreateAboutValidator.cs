@@ -11,8 +11,6 @@ namespace CargoTrack.Business.Validators.Abouts
             RuleFor(x => x.Title).NotEmpty().WithMessage("Başlık boş bırakılamaz.");
             RuleFor(x => x.Description).NotEmpty().WithMessage("Açıklama boş bırakılamaz.");
             RuleFor(x => x.ImageUrl).NotEmpty().WithMessage("Görsel Url boş bırakılamaz.");
-            
         }
-        
     }
 }

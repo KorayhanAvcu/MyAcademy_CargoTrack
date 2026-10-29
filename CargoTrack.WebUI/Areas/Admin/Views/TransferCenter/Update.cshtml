@@ -1,0 +1,25 @@
+﻿@model UpdateTransferCenterDto
+@{ ViewData["Title"] = "Transfer Merkezi Güncelle"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Transfer Merkezi Güncelle</h2>
+    </div>
+</div>
+<form method="post" class="card max-w-md">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All"></div>
+    <div class="mb-4">
+        <label class="label">Ad</label>
+        <input asp-for="Name" class="input" />
+    </div>
+    <div class="mb-6">
+        <label class="label">Şehir</label>
+        <select asp-for="CityId" asp-items="(List<SelectListItem>)ViewBag.Cities" class="input">
+            <option value="">Seçiniz</option>
+        </select>
+    </div>
+    <div class="flex gap-2">
+        <a asp-action="Index" class="btn-outline">Vazgeç</a>
+        <button class="btn-accent">Kaydet</button>
+    </div>
+</form>

@@ -1,0 +1,55 @@
+﻿@model PagedResultDto<ResultEmployeeDto>
+@{
+    ViewData["Title"] = "Personel";
+    var branches = (List<SelectListItem>)ViewBag.Branches;
+    var selectedBranch = (ViewBag.BranchId as Guid?)?.ToString();
+}
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Personel</h2>
+        <p class="text-on-surface-variant">Şubelere bağlı yöneticiler ve çalışanlar</p>
+    </div>
+    <div class="flex gap-2"><a asp-action="Create" class="btn-accent"><span class="material-symbols-outlined text-[18px]">person_add</span> Yeni Personel</a></div>
+</div>
+<form method="get" class="card !p-4 mb-6 grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+    <div class="md:col-span-5">
+        <label class="label">Ara</label>
+        <input name="search" value="@ViewBag.Search" class="input" placeholder="Ad, soyad veya e-posta" />
+    </div>
+    <div class="md:col-span-5">
+        <label class="label">Şube</label>
+        <select name="branchId" class="input">
+            <option value="">Tüm şubeler</option>
+            @foreach (var b in branches)
+            {
+                <option value="@b.Value" selected="@(b.Value == selectedBranch)">@b.Text</option>
+            }
+        </select>
+    </div>
+    <div class="md:col-span-2"><button class="btn-accent w-full">Filtrele</button></div>
+</form>
+<div class="card !p-0 overflow-x-auto">
+    <table class="tbl">
+        <thead><tr><th>Ad Soyad</th><th>E-posta</th><th>Pozisyon</th><th>Şube</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var e in Model.Items)
+            {
+                <tr>
+                    <td class="font-semibold">@e.AppUserFirstName @e.AppUserLastName</td>
+                    <td>@e.AppUserEmail</td>
+                    <td>@e.Position</td>
+                    <td>@e.BranchCityName <span class="text-outline">/ @e.BranchName</span></td>
+                    <td class="text-right whitespace-nowrap">
+                        <a asp-action="Update" asp-route-id="@e.Id" class="btn-outline btn-sm">Güncelle</a>
+                        <form asp-action="Delete" asp-route-id="@e.Id" method="post" class="inline" onsubmit="return confirm('Silmek istediğinize emin misiniz?')"><button type="submit" class="btn-danger btn-sm">Sil</button></form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Items.Any())
+            {
+                <tr><td colspan="5" class="text-center text-outline py-10">Kayıt bulunamadı.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
+<vc:pagination pagination="Model.ToPagination()" />

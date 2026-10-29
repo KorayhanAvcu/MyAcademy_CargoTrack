@@ -1,0 +1,143 @@
+﻿@model CargoDetailDto
+@{
+    var movements = Model.Movements.OrderBy(m => m.MovementDate).ToList();
+    var isDelivered = Model.CargoStatus == CargoStatus.Delivered;
+}
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="lg:col-span-8 flex flex-col gap-6">
+        <div class="card flex flex-col md:flex-row gap-8">
+            <div class="flex-1 md:border-r border-outline-variant/30 md:pr-6">
+                <p class="text-xs font-bold uppercase tracking-wider text-outline mb-1">Takip Numarası</p>
+                <h2 class="text-2xl font-semibold text-primary-container mb-4">@Model.TrackCode</h2>
+                @await Component.InvokeAsync("StatusBadge", new { status = Model.CargoStatus })
+                <div class="flex gap-8 mt-6">
+                    <div>
+                        <p class="text-sm text-outline mb-1">Gönderim Tarihi</p>
+                        <p class="font-semibold">@Model.ShipmentDate.ToString("dd MMMM yyyy")</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-outline mb-1">@(isDelivered ? "Teslim Tarihi" : "Tahmini Varış")</p>
+                        <p class="font-semibold">@((Model.DeliveredDate ?? Model.EstimatedArrivalDate).ToString("dd MMMM yyyy"))</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 flex items-center">
+                <div class="flex justify-between items-center w-full">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center mb-2 text-primary-container">
+                            <span class="material-symbols-outlined filled-icon text-[18px]">location_on</span>
+                        </div>
+                        <span class="font-semibold">@Model.OriginBranchCityName</span>
+                        <span class="text-xs text-outline">@Model.OriginBranchName</span>
+                    </div>
+                    <div class="flex-grow flex items-center px-2">
+                        <div class="flex-grow h-px bg-outline-variant relative">
+                            <span class="material-symbols-outlined filled-icon text-secondary-container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-1">local_shipping</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-8 h-8 rounded-full @(isDelivered ? "bg-[#e8f5e9] text-[#2e7d32]" : "bg-surface-container text-outline") flex items-center justify-center mb-2">
+                            <span class="material-symbols-outlined text-[18px]">flag</span>
+                        </div>
+                        <span class="font-semibold">@Model.DestinationBranchCityName</span>
+                        <span class="text-xs text-outline">@Model.DestinationBranchName</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.DeliveryCode != null)
+        {
+            <div class="rounded-xl bg-primary-container text-on-primary p-6 flex items-center gap-4">
+                <span class="material-symbols-outlined text-[36px] text-secondary-container">pin</span>
+                <div>
+                    <p class="text-primary-fixed-dim text-sm">Teslimat kodunuz</p>
+                    <p class="text-3xl font-bold tracking-[0.3em]">@Model.DeliveryCode</p>
+                    <p class="text-primary-fixed-dim text-sm mt-1">Kurye kapıda bu kodu isteyecek. Kodu kimseyle paylaşmayın.</p>
+                </div>
+            </div>
+        }
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card !p-5 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+                    <span class="material-symbols-outlined">person</span>
+                </div>
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-outline mb-1">Gönderici</p>
+                    <p class="font-semibold">@Model.SenderFirstName @Model.SenderLastName</p>
+                    <p class="text-sm text-on-surface-variant">@Model.OriginBranchCityName / @Model.OriginBranchName</p>
+                </div>
+            </div>
+            <div class="card !p-5 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+                    <span class="material-symbols-outlined">person</span>
+                </div>
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-outline mb-1">Alıcı</p>
+                    <p class="font-semibold">@Model.ReceiverFirstName @Model.ReceiverLastName</p>
+                    <p class="text-sm text-on-surface-variant">@Model.DestinationBranchCityName / @Model.DestinationBranchName</p>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.DeliveryAddress))
+        {
+            <div class="card !p-5 flex items-start gap-4">
+                <div class="w-12 h-12 rounded-full bg-[#fff3e0] text-[#e65100] flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined">home_pin</span>
+                </div>
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-outline mb-1">Teslimat Adresi</p>
+                    <p class="font-semibold">@Model.DeliveryAddress</p>
+                    <p class="text-sm text-on-surface-variant">Kurye kargoyu bu adrese, @Model.DestinationBranchName üzerinden dağıtır.</p>
+                </div>
+            </div>
+        }
+
+        <div class="card">
+            <h3 class="text-xl font-semibold text-primary-container mb-4">Kargo Bilgileri</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-surface rounded-lg p-4"><p class="text-sm text-outline mb-1">Ağırlık</p><p class="font-semibold">@Model.Weight kg</p></div>
+                <div class="bg-surface rounded-lg p-4"><p class="text-sm text-outline mb-1">Ölçü (cm)</p><p class="font-semibold">@Model.Width × @Model.Length × @Model.Height</p></div>
+                <div class="bg-surface rounded-lg p-4"><p class="text-sm text-outline mb-1">Desi</p><p class="font-semibold">@Model.Desi</p></div>
+                <div class="bg-surface rounded-lg p-4"><p class="text-sm text-outline mb-1">Ücret</p><p class="font-semibold">@Model.Price.ToString("C2")</p></div>
+                <div class="bg-surface rounded-lg p-4"><p class="text-sm text-outline mb-1">Gönderi Tipi</p><p class="font-semibold">@Model.CargoType.ToDisplayName()</p></div>
+                <div class="bg-surface rounded-lg p-4"><p class="text-sm text-outline mb-1">Teslimat Tipi</p><p class="font-semibold">@Model.DeliveryType.ToDisplayName()</p></div>
+                <div class="bg-surface rounded-lg p-4"><p class="text-sm text-outline mb-1">Başarısız Deneme</p><p class="font-semibold @(Model.FailedAttemptCount > 0 ? "text-error" : "")">@Model.FailedAttemptCount / 3</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lg:col-span-4">
+        <div class="card h-full">
+            <div class="flex items-center gap-2 mb-6 pb-4 border-b border-outline-variant/30">
+                <span class="material-symbols-outlined text-primary-container">history</span>
+                <h3 class="text-xl font-semibold text-primary-container">Kargo Hareketleri</h3>
+            </div>
+            <ol class="relative border-l-2 border-[#E2E8F0] ml-3">
+                @for (var i = 0; i < movements.Count; i++)
+                {
+                    var m = movements[i];
+                    var isLast = i == movements.Count - 1;
+                    var isFailure = m.NewStatus == CargoStatus.DeliveryFailed;
+                    var dot = isFailure ? "bg-error" : isLast && !isDelivered ? "bg-secondary-container" : "bg-green-500";
+                    <li class="mb-8 ml-6 last:mb-0">
+                        <span class="absolute -left-[13px] w-6 h-6 rounded-full @dot text-white flex items-center justify-center ring-4 ring-white">
+                            <span class="material-symbols-outlined text-[14px]">@(isFailure ? "close" : isLast && !isDelivered ? "local_shipping" : "check")</span>
+                        </span>
+                        <p class="font-semibold mb-1 @(isLast && !isDelivered ? "text-secondary-container" : "")">@m.NewStatus.ToDisplayName()</p>
+                        <p class="flex items-center gap-1 text-sm text-outline">
+                            <span class="material-symbols-outlined text-[16px]">location_on</span>
+                            @(m.LocationName ?? "-") • @m.MovementDate.ToString("dd MMM, HH:mm")
+                        </p>
+                        @if (!string.IsNullOrEmpty(m.Description))
+                        {
+                            <p class="text-sm text-on-surface-variant mt-1">@m.Description</p>
+                        }
+                    </li>
+                }
+            </ol>
+        </div>
+    </div>
+</div>

@@ -2,6 +2,8 @@
 using CargoTrack.Business.Helpers;
 using CargoTrack.Business.Services.AuditLogs;
 using CargoTrack.Business.Services.CargoPricing;
+using CargoTrack.DataAccess.Repositories.Addresses;
+using CargoTrack.DataAccess.Repositories.Branches;
 using CargoTrack.DataAccess.Repositories.CargoMovements;
 using CargoTrack.DataAccess.Repositories.Cargos;
 using CargoTrack.DataAccess.Repositories.Deliveries;
@@ -22,14 +24,12 @@ namespace CargoTrack.Business.Services.Cargos
                               IDeliveryExceptionRepository _deliveryExceptionRepository,
                               IEmployeeRepository _employeeRepository,
                               IAuditLogService _auditLogService,
-                              ICargoPricingService _cargoPricingService) : ICargoService
+                              ICargoPricingService _cargoPricingService,
+                              IAddressRepository _addressRepository,
+                              IBranchRepository _branchRepository) : ICargoService
     {
         private const int MaxFailedAttempts = 3;
 
-        // =====================================================
-        // DURUM GEÇİŞ KURALLARI
-        // "Bu durumdan → hangi durumlara geçilebilir?"
-        // =====================================================
         private static readonly Dictionary<CargoStatus, CargoStatus[]> _allowedTransitions = new()
         {
             [CargoStatus.Created] = new[] { CargoStatus.AtOriginBranch },
@@ -37,24 +37,29 @@ namespace CargoTrack.Business.Services.Cargos
             [CargoStatus.InTransferCenter] = new[] { CargoStatus.InTransferCenter, CargoStatus.AtDestinationBranch },
             [CargoStatus.AtDestinationBranch] = new[] { CargoStatus.OutForDelivery },
             [CargoStatus.OutForDelivery] = new[] { CargoStatus.Delivered, CargoStatus.DeliveryFailed },
-            [CargoStatus.DeliveryFailed] = new[] { CargoStatus.OutForDelivery },          // Yeniden dağıtım
+            [CargoStatus.DeliveryFailed] = new[] { CargoStatus.OutForDelivery },
             [CargoStatus.ReturnInProgress] = new[] { CargoStatus.ReturnedToSender },
             [CargoStatus.Delivered] = Array.Empty<CargoStatus>(),
             [CargoStatus.ReturnedToSender] = Array.Empty<CargoStatus>()
         };
 
-        // Bu durumlara genel hareket ekranından geçilemez: kod doğrulama / gerekçe zorunlu
         private static readonly CargoStatus[] _specialStatuses = { CargoStatus.Delivered, CargoStatus.DeliveryFailed };
-
-        // =====================================================
-        // OLUŞTURMA VE OPERASYON
-        // =====================================================
 
         public async Task<string> CreateAsync(CreateCargoDto dto, Guid userId)
         {
-            var cargo = dto.Adapt<Cargo>();
+            var address = await _addressRepository.GetByIdAsync(dto.ReceiverAddressId)
+                          ?? throw new BusinessException("Teslimat adresi bulunamadı.");
+            if (address.UserId != dto.ReceiverId)
+                throw new BusinessException("Seçilen adres alıcıya ait değil.");
 
-            // Bu alanları kullanıcı girmez, servis hesaplar
+            var destination = await _branchRepository.GetByIdAsync(dto.DestinationBranchId)
+                              ?? throw new BusinessException("Varış şubesi bulunamadı.");
+            if (destination.CityId != address.CityId)
+                throw new BusinessException("Varış şubesi, teslimat adresiyle aynı şehirde olmalıdır.");
+
+            var cargo = dto.Adapt<Cargo>();
+            cargo.DeliveryAddress = $"{address.FullAddress}, {address.District} / {address.City.Name}";
+
             cargo.TrackCode = await GenerateTrackCodeAsync();
             cargo.ShipmentDate = DateTime.Now;
             cargo.Desi = _cargoPricingService.CalculateDesi(dto.Width, dto.Length, dto.Height);
@@ -63,8 +68,8 @@ namespace CargoTrack.Business.Services.Cargos
             cargo.Price = await _cargoPricingService.CalculatePriceAsync(cargo.Desi, dto.Weight, dto.DeliveryType, distanceType);
             cargo.EstimatedArrivalDate = _cargoPricingService.CalculateEstimatedArrivalDate(cargo.ShipmentDate, dto.DeliveryType, distanceType);
             cargo.CargoStatus = CargoStatus.Created;
+            cargo.DeliveryCode = GenerateDeliveryCode();
 
-            // İlk hareket: Cargo'nun listesine eklendiği için tek SaveChanges ile birlikte kaydedilir
             cargo.Movements = new List<CargoMovement>
             {
                 new()
@@ -97,8 +102,8 @@ namespace CargoTrack.Business.Services.Cargos
 
             var oldStatus = cargo.CargoStatus;
             EnsureTransition(oldStatus, dto.NewStatus);
+            EnsureLocation(cargo, dto);
 
-            // Her dağıtıma çıkışta yeni teslimat kodu
             if (dto.NewStatus == CargoStatus.OutForDelivery)
                 cargo.DeliveryCode = GenerateDeliveryCode();
 
@@ -116,7 +121,6 @@ namespace CargoTrack.Business.Services.Cargos
             await EnsureEmployeeCanOperateAsync(cargo, employeeId);
             EnsureTransition(cargo.CargoStatus, CargoStatus.Delivered);
 
-            // Kod doğrulanmadan teslim edilemez
             if (cargo.DeliveryCode != dto.DeliveryCode?.Trim())
                 throw new BusinessException("Teslimat kodu hatalı.");
 
@@ -125,7 +129,6 @@ namespace CargoTrack.Business.Services.Cargos
 
             cargo.CargoStatus = CargoStatus.Delivered;
             cargo.DeliveredDate = now;
-            cargo.DeliveryCode = null;   // Kod tek kullanımlık
             await _cargoRepository.UpdateAsync(cargo);
 
             await _deliveryRepository.CreateAsync(new Delivery
@@ -150,7 +153,6 @@ namespace CargoTrack.Business.Services.Cargos
 
             var oldStatus = cargo.CargoStatus;
             cargo.FailedAttemptCount++;
-            cargo.DeliveryCode = null;   // Bir sonraki dağıtımda yeni kod üretilir
 
             var startReturn = cargo.FailedAttemptCount >= MaxFailedAttempts;
             cargo.CargoStatus = startReturn ? CargoStatus.ReturnInProgress : CargoStatus.DeliveryFailed;
@@ -166,12 +168,11 @@ namespace CargoTrack.Business.Services.Cargos
                 AttemptDate = DateTime.Now
             });
 
-            var description = $"{cargo.FailedAttemptCount}. teslimat denemesi başarısız ({dto.Reason})";
+            var description = $"{cargo.FailedAttemptCount}. teslimat denemesi başarısız ({dto.Reason.GetDisplayName()})";
             await AddMovementAsync(cargo.Id, oldStatus, CargoStatus.DeliveryFailed, description,
                                    cargo.DestinationBranchId, null, employeeId);
             await LogStatusChangeAsync(userId, cargo.Id, oldStatus, CargoStatus.DeliveryFailed, dto.Description);
 
-            // Üçüncü başarısız denemede iade süreci otomatik başlar
             if (startReturn)
             {
                 var returnDescription = $"{MaxFailedAttempts} başarısız deneme sonrası iade süreci başlatıldı";
@@ -181,10 +182,6 @@ namespace CargoTrack.Business.Services.Cargos
                                            CargoStatus.ReturnInProgress, returnDescription);
             }
         }
-
-        // =====================================================
-        // OKUMA
-        // =====================================================
 
         public async Task<CargoTrackingDto?> GetByTrackCodeAsync(string trackCode)
         {
@@ -199,7 +196,6 @@ namespace CargoTrack.Business.Services.Cargos
         {
             var cargo = await GetCargoOrThrowAsync(cargoId);
 
-            // Yetki: Admin her şeyi, Manager kendi şubesini, User kendi kargosunu görür
             var isOwner = cargo.SenderId == userId || cargo.ReceiverId == userId;
             var isBranchManager = managerBranchId.HasValue &&
                                   (cargo.OriginBranchId == managerBranchId || cargo.DestinationBranchId == managerBranchId);
@@ -209,7 +205,6 @@ namespace CargoTrack.Business.Services.Cargos
 
             var dto = cargo.Adapt<CargoDetailDto>();
 
-            // Teslimat kodunu sadece alıcı görür (kurye kapıda alıcıdan ister)
             if (cargo.ReceiverId != userId)
                 dto.DeliveryCode = null;
 
@@ -243,10 +238,6 @@ namespace CargoTrack.Business.Services.Cargos
             return QueryPagedAsync(query, filter);
         }
 
-        // =====================================================
-        // YARDIMCI METOTLAR
-        // =====================================================
-
         private async Task<Cargo> GetCargoOrThrowAsync(Guid cargoId)
         {
             return await _cargoRepository.GetByIdAsync(cargoId)
@@ -256,11 +247,29 @@ namespace CargoTrack.Business.Services.Cargos
         private static void EnsureTransition(CargoStatus from, CargoStatus to)
         {
             if (!_allowedTransitions[from].Contains(to))
-                throw new BusinessException($"{from} durumundan {to} durumuna geçilemez.");
+                throw new BusinessException($"\"{from.GetDisplayName()}\" durumundan \"{to.GetDisplayName()}\" durumuna geçilemez.");
         }
 
-        // Personel yalnızca çıkış veya varış şubesi kendi şubesi olan kargoda işlem yapabilir.
-        // Admin işlemlerinde employeeId null gelir ve kontrol yapılmaz.
+        private static void EnsureLocation(Cargo cargo, ChangeCargoStatusDto dto)
+        {
+            if (dto.NewStatus == CargoStatus.InTransferCenter)
+            {
+                if (!dto.TransferCenterId.HasValue)
+                    throw new BusinessException("\"Transfer Merkezinde\" durumu için bir transfer merkezi seçilmelidir.");
+                return;
+            }
+
+            var (expectedBranchId, branchLabel) = dto.NewStatus switch
+            {
+                CargoStatus.AtOriginBranch or CargoStatus.ReturnedToSender => ((Guid?)cargo.OriginBranchId, "çıkış şubesi"),
+                CargoStatus.AtDestinationBranch or CargoStatus.OutForDelivery => ((Guid?)cargo.DestinationBranchId, "varış şubesi"),
+                _ => ((Guid?)null, "")
+            };
+
+            if (expectedBranchId.HasValue && dto.BranchId != expectedBranchId)
+                throw new BusinessException($"\"{dto.NewStatus.GetDisplayName()}\" durumu için konum olarak kargonun {branchLabel} seçilmelidir.");
+        }
+
         private async Task EnsureEmployeeCanOperateAsync(Cargo cargo, Guid? employeeId)
         {
             if (employeeId is null)
@@ -273,7 +282,6 @@ namespace CargoTrack.Business.Services.Cargos
                 throw new UnauthorizedAccessException("Bu kargo şubenize ait değil.");
         }
 
-        // Hareket ayrı CreateAsync ile eklenir (Update ile eklenirse EF onu INSERT değil UPDATE sanar)
         private async Task AddMovementAsync(Guid cargoId, CargoStatus? oldStatus, CargoStatus newStatus, string? description,
                                             Guid? branchId, Guid? transferCenterId, Guid? employeeId)
         {
@@ -300,7 +308,7 @@ namespace CargoTrack.Business.Services.Cargos
         {
             return await ApplyFilter(query, filter)
                 .OrderByDescending(c => c.ShipmentDate)
-                .ProjectToType<ResultCargoDto>()   // DTO dönüşümü SQL'de yapılır, sadece gereken kolonlar gelir
+                .ProjectToType<ResultCargoDto>()
                 .ToPagedResultAsync(filter.Page, filter.PageSize);
         }
 
@@ -328,7 +336,6 @@ namespace CargoTrack.Business.Services.Cargos
             return query;
         }
 
-        // MYC-2026-849251 formatı, benzersiz olana kadar yeniden üretir
         private async Task<string> GenerateTrackCodeAsync()
         {
             string code;
@@ -341,7 +348,6 @@ namespace CargoTrack.Business.Services.Cargos
             return code;
         }
 
-        // Güvenlik kodu olduğu için tahmin edilemeyen rastgele sayı üreteci
         private static string GenerateDeliveryCode()
         {
             return RandomNumberGenerator.GetInt32(100000, 1000000).ToString();

@@ -4,7 +4,7 @@ namespace CargoTrack.DTO.DTOs.AuditLogDtos
 {
     public class AuditLogFilterDto
     {
-        public string? Search { get; set; }            // Kullanıcı adı veya açıklama
+        public string? Search { get; set; }
         public AuditActionType? ActionType { get; set; }
         public string? EntityName { get; set; }
         public DateTime? StartDate { get; set; }

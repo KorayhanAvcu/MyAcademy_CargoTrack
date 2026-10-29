@@ -1,0 +1,147 @@
+﻿@model CreateCargoDto
+@{
+    ViewData["Title"] = "Kargo Oluştur";
+    var customers = (List<SelectListItem>)ViewBag.Customers;
+    var originBranches = (List<SelectListItem>)ViewBag.OriginBranches;
+    var destinationBranches = (List<BranchOptionViewModel>)ViewBag.DestinationBranches;
+}
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Kargo Oluştur</h2>
+        <p class="text-on-surface-variant">Ücret, desi, takip numarası ve tahmini teslim tarihi otomatik hesaplanır</p>
+    </div>
+</div>
+<form method="post" class="card max-w-4xl">
+    <div asp-validation-summary="All"></div>
+
+    <h3 class="font-semibold text-primary-container mb-3">Gönderici</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+            <label class="label">Gönderici</label>
+            <select asp-for="SenderId" asp-items="customers" class="input"><option value="">Seçiniz</option></select>
+        </div>
+        <div>
+            <label class="label">Çıkış Şubesi</label>
+            <select asp-for="OriginBranchId" asp-items="originBranches" class="input"><option value="">Seçiniz</option></select>
+        </div>
+    </div>
+
+    <h3 class="font-semibold text-primary-container mb-3">Alıcı ve Teslimat Adresi</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+        <div>
+            <label class="label">Alıcı</label>
+            <select asp-for="ReceiverId" asp-items="customers" class="input" id="receiverSelect"><option value="">Seçiniz</option></select>
+        </div>
+        <div>
+            <label class="label">Teslimat Adresi</label>
+            <select asp-for="ReceiverAddressId" class="input" id="addressSelect" disabled>
+                <option value="">Önce alıcıyı seçin</option>
+            </select>
+        </div>
+    </div>
+    <p id="addressHint" class="text-xs text-outline mb-4">Alıcının "Adreslerim" sayfasında kayıtlı adresleri listelenir.</p>
+    <div class="mb-6 md:w-1/2">
+        <label class="label">Varış Şubesi <span class="text-outline font-normal">(adresin şehrindeki şubeler)</span></label>
+        <select asp-for="DestinationBranchId" class="input" id="destinationSelect">
+            <option value="">Önce teslimat adresini seçin</option>
+            @foreach (var b in destinationBranches)
+            {
+                <option value="@b.Id" data-city="@b.CityId">@b.Text</option>
+            }
+        </select>
+    </div>
+
+    <h3 class="font-semibold text-primary-container mb-3">Paket Bilgileri</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div><label class="label">Ağırlık (kg)</label><input asp-for="Weight" class="input" /></div>
+        <div><label class="label">En (cm)</label><input asp-for="Width" class="input" /></div>
+        <div><label class="label">Boy (cm)</label><input asp-for="Length" class="input" /></div>
+        <div><label class="label">Yükseklik (cm)</label><input asp-for="Height" class="input" /></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+            <label class="label">Kargo Tipi</label>
+            <select asp-for="CargoType" asp-items="Html.GetEnumSelectList<CargoType>()" class="input"></select>
+        </div>
+        <div>
+            <label class="label">Teslimat Tipi</label>
+            <select asp-for="DeliveryType" asp-items="Html.GetEnumSelectList<DeliveryType>()" class="input"></select>
+        </div>
+    </div>
+    <p class="text-xs text-outline mb-6">Desi = En × Boy × Yükseklik / 3000. Ücret, desi ile kilodan büyük olanına göre hesaplanır.</p>
+    <div class="flex gap-2">
+        <a asp-action="Index" class="btn-outline">Vazgeç</a>
+        <button class="btn-accent"><span class="material-symbols-outlined text-[18px]">add</span> Oluştur</button>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+    const receiverSelect = document.getElementById('receiverSelect');
+    const addressSelect = document.getElementById('addressSelect');
+    const destinationSelect = document.getElementById('destinationSelect');
+    const addressHint = document.getElementById('addressHint');
+    const selectedAddress = '@Model?.ReceiverAddressId';
+    const selectedDestination = '@Model?.DestinationBranchId';
+    let addressCities = {};
+
+    async function loadAddresses(receiverId, preselect) {
+        addressSelect.innerHTML = '';
+        addressCities = {};
+        if (!receiverId) {
+            addressSelect.add(new Option('Önce alıcıyı seçin', ''));
+            addressSelect.disabled = true;
+            filterBranches(null);
+            return;
+        }
+        const response = await fetch('/Admin/Cargo/ReceiverAddresses?receiverId=' + receiverId);
+        const addresses = await response.json();
+        if (addresses.length === 0) {
+            addressSelect.add(new Option('Bu alıcının kayıtlı adresi yok', ''));
+            addressSelect.disabled = true;
+            addressHint.textContent = 'Alıcı, Müşteri panelindeki "Adreslerim" sayfasından adres eklemelidir.';
+            addressHint.classList.add('text-error');
+            filterBranches(null);
+            return;
+        }
+        addressHint.textContent = 'Alıcının "Adreslerim" sayfasında kayıtlı adresleri listelenir.';
+        addressHint.classList.remove('text-error');
+        addressSelect.add(new Option('Adres seçiniz', ''));
+        addresses.forEach(a => {
+            addressCities[a.id] = a.cityId;
+            addressSelect.add(new Option(a.text, a.id, false, a.id === preselect));
+        });
+        addressSelect.disabled = false;
+        filterBranches(addressCities[addressSelect.value] ?? null);
+    }
+
+    function filterBranches(cityId) {
+        let firstVisible = null;
+        Array.from(destinationSelect.options).forEach(option => {
+            if (!option.value) return;
+            const visible = cityId !== null && option.dataset.city === cityId;
+            option.hidden = !visible;
+            option.disabled = !visible;
+            if (visible && firstVisible === null) firstVisible = option;
+        });
+        destinationSelect.options[0].text = cityId === null
+            ? 'Önce teslimat adresini seçin'
+            : (firstVisible ? 'Şube seçiniz' : 'Bu şehirde şube yok');
+        const current = destinationSelect.selectedOptions[0];
+        if (!current || current.disabled) {
+            destinationSelect.value = firstVisible ? firstVisible.value : '';
+        }
+    }
+
+    receiverSelect.addEventListener('change', () => loadAddresses(receiverSelect.value, null));
+    addressSelect.addEventListener('change', () => filterBranches(addressCities[addressSelect.value] ?? null));
+
+    if (receiverSelect.value) {
+        loadAddresses(receiverSelect.value, selectedAddress).then(() => {
+            if (selectedDestination) destinationSelect.value = selectedDestination;
+        });
+    } else {
+        filterBranches(null);
+    }
+</script>
+}

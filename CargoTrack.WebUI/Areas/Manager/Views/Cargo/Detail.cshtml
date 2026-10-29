@@ -1,0 +1,26 @@
+﻿@model CargoDetailDto
+@{
+    ViewData["Title"] = Model.TrackCode;
+    var isFinal = Model.CargoStatus is CargoStatus.Delivered or CargoStatus.ReturnedToSender;
+}
+<div class="flex flex-col md:flex-row justify-between gap-3 mb-6">
+    <a asp-action="Index" class="btn-outline"><span class="material-symbols-outlined text-[18px]">arrow_back</span> Listeye dön</a>
+    <div class="flex gap-2">
+        @if (Model.CargoStatus == CargoStatus.OutForDelivery)
+        {
+            <a asp-action="Deliver" asp-route-id="@Model.Id" class="btn bg-[#2e7d32] text-white hover:opacity-90">
+                <span class="material-symbols-outlined text-[18px]">pin</span> Teslim Et (Kod)
+            </a>
+            <a asp-action="ReportFailure" asp-route-id="@Model.Id" class="btn-danger">
+                <span class="material-symbols-outlined text-[18px]">report</span> Teslim Edilemedi
+            </a>
+        }
+        else if (!isFinal)
+        {
+            <a asp-action="Movement" asp-route-id="@Model.Id" class="btn-accent">
+                <span class="material-symbols-outlined text-[18px]">add_location_alt</span> Yeni Hareket
+            </a>
+        }
+    </div>
+</div>
+<vc:cargo-detail cargo="Model" />

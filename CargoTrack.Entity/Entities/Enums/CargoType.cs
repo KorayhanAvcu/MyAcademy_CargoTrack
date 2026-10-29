@@ -1,10 +1,12 @@
-﻿namespace CargoTrack.Entity.Entities.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CargoTrack.Entity.Entities.Enums
 {
-    public enum CargoType 
+    public enum CargoType
     {
-        Standard = 1,
-        Urgent = 2,
-        Fragile = 3,
-        Heavy = 4
+        [Display(Name = "Standart")] Standard = 1,
+        [Display(Name = "Acil")] Urgent = 2,
+        [Display(Name = "Kırılacak")] Fragile = 3,
+        [Display(Name = "Ağır")] Heavy = 4
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace CargoTrack.Entity.Entities.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CargoTrack.Entity.Entities.Enums
 {
     public enum DistanceType
     {
-        SameCity = 1,   // Şehir içi
-        Intercity = 2   // Şehirler arası
+        [Display(Name = "Şehir İçi")] SameCity = 1,
+        [Display(Name = "Şehirler Arası")] Intercity = 2
     }
 }

@@ -1,0 +1,25 @@
+﻿@model PagerViewModel
+<nav class="flex flex-col md:flex-row justify-between items-center gap-3 mt-4">
+    <span class="text-sm text-outline">Toplam @Model.TotalCount kayıt</span>
+    <div class="flex items-center gap-1">
+        @if (Model.PreviousUrl != null)
+        {
+            <a href="@Model.PreviousUrl" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low">
+                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+            </a>
+        }
+        @foreach (var p in Model.Pages)
+        {
+            <a href="@p.Url"
+               class="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-semibold @(p.IsActive ? "bg-primary-container text-white" : "border border-outline-variant hover:bg-surface-container-low")">
+                @p.Number
+            </a>
+        }
+        @if (Model.NextUrl != null)
+        {
+            <a href="@Model.NextUrl" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low">
+                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+            </a>
+        }
+    </div>
+</nav>

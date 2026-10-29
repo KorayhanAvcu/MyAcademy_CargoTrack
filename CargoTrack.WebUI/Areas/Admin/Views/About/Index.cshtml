@@ -1,42 +1,32 @@
 ﻿@model List<ResultAboutDto>
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h1>Hakkımızda</h1>
-@if(!Model.Any())
-{
-    <div>Henüz bir hakkımızda oluşturulmamış.</div>
-    <a href="/Admin/About/Create" class="btn btn-info">Yeni hakkımızda oluştur</a>
-}
-else
-{
-    <table class="table table-bordered table-hover">
-
-        <tr>
-            
-            <th>Görsel</th>
-            <th>Başlık</th>
-            <th>Açıklama</th>
-            <th>İşlemler</th>
-        </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                
-                <td><img src="@item.ImageUrl" alt="Görsel" style="width: 100px; height: auto;" /></td>
-                <td>@item.Title</td>
-                <td>@item.Description</td>
-                <td>
-                    <a href="/Admin/About/Update/@item.Id" class="btn btn-info">Güncelle</a>
-                    <a href="/Admin/About/Delete/@item.Id" onclick="return confirm('Silmek istediğinize emin misiniz?')" class="btn btn-danger">Sil</a>
-                </td>
-            </tr>
-        }
-
+@{ ViewData["Title"] = "Hakkımızda"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Hakkımızda</h2>
+        <p class="text-on-surface-variant">Sitede gösterilen hakkımızda içeriği</p>
+    </div>
+    <div class="flex gap-2"><a asp-action="Create" class="btn-accent"><span class="material-symbols-outlined text-[18px]">add</span> Yeni İçerik</a></div>
+</div>
+<div class="card !p-0 overflow-x-auto">
+    <table class="tbl">
+        <thead><tr><th>Görsel</th><th>Başlık</th><th>Açıklama</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><img src="@item.ImageUrl" alt="" class="w-24 h-16 object-cover rounded-lg bg-surface-container" /></td>
+                    <td class="font-semibold">@item.Title</td>
+                    <td class="max-w-md">@item.Description</td>
+                    <td class="text-right whitespace-nowrap">
+                        <a asp-action="Update" asp-route-id="@item.Id" class="btn-outline btn-sm">Güncelle</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="inline" onsubmit="return confirm('Silmek istediğinize emin misiniz?')"><button type="submit" class="btn-danger btn-sm">Sil</button></form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="4" class="text-center text-outline py-10">Henüz bir hakkımızda içeriği oluşturulmamış.</td></tr>
+            }
+        </tbody>
     </table>
-}
-
-
-
+</div>

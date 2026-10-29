@@ -9,6 +9,5 @@ namespace CargoTrack.DataAccess.Repositories.Branches
         public BranchRepository(AppDbContext context) : base(context)
         {
         }
-    
     }
 }

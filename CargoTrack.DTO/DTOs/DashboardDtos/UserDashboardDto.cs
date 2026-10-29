@@ -9,6 +9,6 @@ namespace CargoTrack.DTO.DTOs.DashboardDtos
         public int OutgoingActiveCount { get; set; }
         public int DeliveredCount { get; set; }
         public List<ResultCargoDto> ActiveCargos { get; set; } = new();
-        public CargoDetailDto? LastCargo { get; set; }   // Son kargo durumu + zaman çizelgesi + tahmini teslim
+        public CargoDetailDto? LastCargo { get; set; }
     }
 }

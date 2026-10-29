@@ -25,7 +25,8 @@ namespace CargoTrack.Business.Services.TransferCenters
 
         public async Task CreateAsync(CreateTransferCenterDto dto)
         {
-            if (await _transferCenterRepository.AnyAsync(x => x.Name == dto.Name.Trim()))
+            dto.Name = dto.Name.Trim();
+            if (await _transferCenterRepository.AnyAsync(x => x.Name == dto.Name))
                 throw new BusinessException("Bu isimde bir transfer merkezi zaten var.");
 
             await _transferCenterRepository.CreateAsync(dto.Adapt<TransferCenter>());
@@ -33,7 +34,8 @@ namespace CargoTrack.Business.Services.TransferCenters
 
         public async Task UpdateAsync(UpdateTransferCenterDto dto)
         {
-            if (await _transferCenterRepository.AnyAsync(x => x.Name == dto.Name.Trim() && x.Id != dto.Id))
+            dto.Name = dto.Name.Trim();
+            if (await _transferCenterRepository.AnyAsync(x => x.Name == dto.Name && x.Id != dto.Id))
                 throw new BusinessException("Bu isimde bir transfer merkezi zaten var.");
 
             var transferCenter = await GetOrThrowAsync(dto.Id);
@@ -44,7 +46,7 @@ namespace CargoTrack.Business.Services.TransferCenters
         public async Task DeleteAsync(Guid id)
         {
             var transferCenter = await GetOrThrowAsync(id);
-            await _transferCenterRepository.DeleteAsync(transferCenter);   // Soft delete (AppDbContext)
+            await _transferCenterRepository.DeleteAsync(transferCenter);
         }
 
         private async Task<TransferCenter> GetOrThrowAsync(Guid id)

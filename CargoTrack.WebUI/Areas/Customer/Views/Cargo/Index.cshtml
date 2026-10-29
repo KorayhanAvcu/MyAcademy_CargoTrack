@@ -1,0 +1,11 @@
+﻿@model PagedResultDto<ResultCargoDto>
+@{ ViewData["Title"] = "Kargolarım"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Kargolarım</h2>
+        <p class="text-on-surface-variant">Gönderdiğiniz ve size gelen kargolar</p>
+    </div>
+</div>
+<vc:cargo-filter filter="(CargoFilterDto)ViewBag.Filter" show-direction="true" />
+<vc:cargo-table cargos="Model.Items" />
+<vc:pagination pagination="Model.ToPagination()" />

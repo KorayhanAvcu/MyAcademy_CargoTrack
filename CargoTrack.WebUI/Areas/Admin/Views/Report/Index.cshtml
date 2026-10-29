@@ -1,0 +1,79 @@
+﻿@model ReportDto
+@{ ViewData["Title"] = "Raporlar"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Performans Raporları</h2>
+        <p class="text-on-surface-variant">Şube ve personel bazında teslimat performansı</p>
+    </div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-4 mb-6">
+    <vc:stat-card title="Ort. Teslimat Süresi" value="@Model.AverageDeliveryHours saat" color="dark" />
+    <vc:stat-card title="Zamanında Teslimat" value="%@Model.OnTimeRate" color="success" />
+    <vc:stat-card title="İade Oranı" value="%@Model.ReturnRate" color="warning" />
+    <vc:stat-card title="En Çok Gönderen" value="@(Model.TopSenderBranch ?? "-")" color="primary" />
+    <vc:stat-card title="En Çok Teslim Eden" value="@(Model.TopDeliveryBranch ?? "-")" color="primary" />
+</div>
+
+<div class="card !p-0 overflow-x-auto mb-6">
+    <h3 class="font-semibold text-primary-container px-6 pt-6 pb-3">Şube Performansı</h3>
+    <table class="tbl">
+        <thead><tr><th>Şube</th><th>Giden</th><th>Gelen</th><th>Teslim</th><th>Başarı</th><th>Geciken</th><th>Bugünkü İşlem</th></tr></thead>
+        <tbody>
+            @foreach (var b in Model.Branches)
+            {
+                <tr>
+                    <td class="font-semibold">@b.BranchName</td>
+                    <td>@b.SentCount</td>
+                    <td>@b.IncomingCount</td>
+                    <td>@b.DeliveredCount</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <div class="w-20 h-2 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bg-secondary-container" style="width: @(b.SuccessRate.ToString(System.Globalization.CultureInfo.InvariantCulture))%"></div>
+                            </div>
+                            <span class="text-xs">%@b.SuccessRate</span>
+                        </div>
+                    </td>
+                    <td class="@(b.DelayedCount > 0 ? "text-error font-semibold" : "")">@b.DelayedCount</td>
+                    <td>@b.TodayOperationCount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="card !p-0 overflow-x-auto">
+        <h3 class="font-semibold text-primary-container px-6 pt-6 pb-3">En Çok Geciken Şubeler</h3>
+        <table class="tbl">
+            <tbody>
+                @foreach (var b in Model.MostDelayedBranches)
+                {
+                    <tr><td>@b.BranchName</td><td class="text-right text-error font-semibold">@b.DelayedCount</td></tr>
+                }
+                @if (!Model.MostDelayedBranches.Any())
+                {
+                    <tr><td class="text-outline">Geciken kargo yok.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="card !p-0 overflow-x-auto lg:col-span-2">
+        <h3 class="font-semibold text-primary-container px-6 pt-6 pb-3">Personel Performansı</h3>
+        <table class="tbl">
+            <thead><tr><th>Personel</th><th>Şube</th><th>Teslim</th><th>Başarısız</th><th>Bugün</th></tr></thead>
+            <tbody>
+                @foreach (var e in Model.Employees)
+                {
+                    <tr>
+                        <td class="font-semibold">@e.FullName</td>
+                        <td>@e.BranchName</td>
+                        <td class="text-[#2e7d32] font-semibold">@e.DeliveredCount</td>
+                        <td class="text-error">@e.FailedCount</td>
+                        <td>@e.TodayOperationCount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

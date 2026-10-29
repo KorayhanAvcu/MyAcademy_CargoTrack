@@ -1,24 +1,20 @@
-﻿using CargoTrack.DataAccess.Context;
+﻿using CargoTrack.Business.Services.Cargos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CargoTrack.WebUI.Controllers
 {
-    public class DefaultController(AppDbContext _context) : Controller
+    public class DefaultController(ICargoService _cargoService) : Controller
     {
         public IActionResult Index()
         {
-            if (TempData["error"] != null)
-            {
-                ViewBag.Error = TempData["error"];
-            }
+            ViewBag.Error = TempData["error"];
             return View();
         }
 
         public async Task<IActionResult> CargoDetails(string trackCode)
         {
-            var cargo = await _context.Cargos.FirstOrDefaultAsync(x=>x.TrackCode == trackCode);
-            if(cargo == null)
+            var cargo = await _cargoService.GetByTrackCodeAsync(trackCode);
+            if (cargo == null)
             {
                 TempData["error"] = "Bu takip numarasına ait bir kargo bulunamadı.";
                 return RedirectToAction(nameof(Index));

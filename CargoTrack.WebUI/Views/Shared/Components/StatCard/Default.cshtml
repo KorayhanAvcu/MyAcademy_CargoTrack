@@ -1,0 +1,20 @@
+﻿@model StatCardViewModel
+@{
+    var (text, bg, icon) = Model.Color switch
+    {
+        "primary" => ("text-primary-container", "bg-surface-container-high", "local_shipping"),
+        "success" => ("text-[#2e7d32]", "bg-[#e8f5e9]", "task_alt"),
+        "danger" => ("text-error", "bg-error-container", "schedule"),
+        "warning" => ("text-[#e65100]", "bg-[#fff3e0]", "report"),
+        _ => ("text-on-background", "bg-surface-container", "inventory_2")
+    };
+}
+<div class="card !p-5 flex items-center gap-4">
+    <div class="w-12 h-12 rounded-full @bg @text flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined">@icon</span>
+    </div>
+    <div class="min-w-0 flex-1">
+        <p class="text-sm text-outline leading-tight">@Model.Title</p>
+        <p class="@(Model.Value.Length > 12 ? "text-base" : "text-2xl") font-bold @text leading-tight break-words mt-1">@Model.Value</p>
+    </div>
+</div>

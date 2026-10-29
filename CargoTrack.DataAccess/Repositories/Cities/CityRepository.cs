@@ -11,6 +11,5 @@ namespace CargoTrack.DataAccess.Repositories.Cities
 {
     public class CityRepository(AppDbContext context) : GenericRepository<City>(context), ICityRepository
     {
-
     }
 }

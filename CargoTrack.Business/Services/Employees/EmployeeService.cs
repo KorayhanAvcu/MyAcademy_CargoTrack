@@ -39,7 +39,6 @@ namespace CargoTrack.Business.Services.Employees
             return employee.Adapt<UpdateEmployeeDto>();
         }
 
-        // Giriş yapan Manager'ın bağlı olduğu şubeyi bulmak için (yetki filtresi)
         public async Task<ResultEmployeeDto?> GetByAppUserIdAsync(Guid appUserId)
         {
             return await _employeeRepository.GetQueryable()
@@ -53,7 +52,6 @@ namespace CargoTrack.Business.Services.Employees
             if (await _userManager.FindByIdAsync(dto.AppUserId.ToString()) is null)
                 throw new BusinessException("Kullanıcı bulunamadı.");
 
-            // AppUserId benzersiz: daha önce silinmiş kayıt varsa yenisini açmak yerine onu geri getir
             var existing = await _employeeRepository.GetQueryable()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(e => e.AppUserId == dto.AppUserId);
@@ -83,7 +81,7 @@ namespace CargoTrack.Business.Services.Employees
         public async Task DeleteAsync(Guid id)
         {
             var employee = await GetOrThrowAsync(id);
-            await _employeeRepository.DeleteAsync(employee);   // Soft delete
+            await _employeeRepository.DeleteAsync(employee);
         }
 
         private async Task<Employee> GetOrThrowAsync(Guid id)

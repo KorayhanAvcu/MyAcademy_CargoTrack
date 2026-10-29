@@ -51,6 +51,7 @@ namespace CargoTrack.WebUI.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _aboutService.DeleteAsync(id);

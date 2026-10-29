@@ -48,7 +48,6 @@ namespace CargoTrack.WebUI.Areas.Admin.Controllers
             }
             await _branchService.CreateAsync(branchDto);
             return RedirectToAction(nameof(Index));
-
         }
 
         public async Task<IActionResult> Update(Guid id)
@@ -70,6 +69,7 @@ namespace CargoTrack.WebUI.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _branchService.DeleteAsync(id);

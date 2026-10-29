@@ -1,0 +1,40 @@
+﻿@model List<CargoRowViewModel>
+<div class="card !p-0 overflow-x-auto">
+    <table class="tbl">
+        <thead>
+            <tr>
+                <th>Takip No</th>
+                <th>Durum</th>
+                <th>Çıkış</th>
+                <th>Varış</th>
+                <th>Gönderim</th>
+                <th>Tahmini Teslim</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in Model)
+            {
+                var c = row.Cargo;
+                <tr class="@(row.IsDelayed ? "bg-error-container/40" : "")">
+                    <td class="font-bold text-primary-container whitespace-nowrap">@c.TrackCode</td>
+                    <td><vc:status-badge status="@c.CargoStatus" /></td>
+                    <td>@c.OriginBranchCityName <span class="text-outline">/ @c.OriginBranchName</span></td>
+                    <td>@c.DestinationBranchCityName <span class="text-outline">/ @c.DestinationBranchName</span></td>
+                    <td class="whitespace-nowrap">@c.ShipmentDate.ToString("dd.MM.yyyy")</td>
+                    <td class="whitespace-nowrap @(row.IsDelayed ? "text-error font-semibold" : "")">
+                        @c.EstimatedArrivalDate.ToString("dd.MM.yyyy")
+                        @if (row.IsDelayed) { <span class="text-xs">(gecikti)</span> }
+                    </td>
+                    <td class="text-right">
+                        <a asp-controller="Cargo" asp-action="Detail" asp-route-id="@c.Id" class="btn-outline btn-sm">Detay</a>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="7" class="text-center text-outline py-10">Kayıt bulunamadı.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

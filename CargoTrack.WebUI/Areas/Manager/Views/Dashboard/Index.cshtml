@@ -1,8 +1,8 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
-    Layout = "null";
-}
-
-<h1>Manager</h1>
-
+﻿@{ ViewData["Title"] = "Dashboard"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">@ViewBag.BranchName</h2>
+        <p class="text-on-surface-variant">Günlük operasyon özeti</p>
+    </div>
+</div>
+@await Component.InvokeAsync("ManagerDashboard", new { branchId = (Guid)ViewBag.BranchId })

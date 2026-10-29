@@ -1,0 +1,45 @@
+﻿@model ChangeCargoStatusDto
+@{ ViewData["Title"] = "Yeni Hareket"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Yeni Hareket</h2>
+        <p class="text-on-surface-variant">Kargonun yeni durumunu ve bulunduğu konumu girin</p>
+    </div>
+</div>
+<form method="post" class="card max-w-2xl">
+    <input type="hidden" asp-for="CargoId" />
+    <div asp-validation-summary="All"></div>
+
+    <div class="mb-4">
+        <label class="label">Yeni Durum</label>
+        <select asp-for="NewStatus" asp-items="(List<SelectListItem>)ViewBag.Statuses" class="input"></select>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+        <div>
+            <label class="label">Şube</label>
+            <select asp-for="BranchId" asp-items="(List<SelectListItem>)ViewBag.Branches" class="input">
+                <option value="">— Seçilmedi —</option>
+            </select>
+        </div>
+        <div>
+            <label class="label">Transfer Merkezi</label>
+            <select asp-for="TransferCenterId" asp-items="(List<SelectListItem>)ViewBag.TransferCenters" class="input">
+                <option value="">— Seçilmedi —</option>
+            </select>
+        </div>
+    </div>
+    <p class="text-xs text-outline mb-4">
+        Şube veya transfer merkezinden yalnızca birini seçin. Transfer merkezi seçerseniz şubeyi "Seçilmedi" yapın.<br />
+        <b>Gönderici Şubesinde</b> ve <b>Göndericiye İade Edildi</b>: çıkış şubesi ·
+        <b>Varış Şubesinde</b> ve <b>Dağıtıma Çıktı</b>: varış şubesi ·
+        <b>Transfer Merkezinde</b>: bir transfer merkezi
+    </p>
+    <div class="mb-6">
+        <label class="label">Açıklama</label>
+        <textarea asp-for="Description" class="input" rows="3"></textarea>
+    </div>
+    <div class="flex gap-2">
+        <a asp-action="Detail" asp-route-id="@Model.CargoId" class="btn-outline">Vazgeç</a>
+        <button class="btn-accent">Kaydet</button>
+    </div>
+</form>

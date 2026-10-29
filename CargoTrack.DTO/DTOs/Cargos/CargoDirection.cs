@@ -1,8 +1,10 @@
-﻿namespace CargoTrack.DTO.DTOs.Cargos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CargoTrack.DTO.DTOs.Cargos
 {
     public enum CargoDirection
     {
-        Incoming = 1,   // Bana gelen
-        Outgoing = 2    // Benim gönderdiğim
+        [Display(Name = "Gelen")] Incoming = 1,
+        [Display(Name = "Giden")] Outgoing = 2
     }
 }

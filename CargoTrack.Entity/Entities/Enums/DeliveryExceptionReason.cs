@@ -1,10 +1,12 @@
-﻿namespace CargoTrack.Entity.Entities.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CargoTrack.Entity.Entities.Enums
 {
     public enum DeliveryExceptionReason
     {
-        WrongAddress = 1,       // Adres hatalı
-        ReceiverNotFound = 2,   // Alıcı yok
-        Damaged = 3,            // Hasarlı
-        Rejected = 4            // Reddedildi
+        [Display(Name = "Adres Hatalı")] WrongAddress = 1,
+        [Display(Name = "Alıcı Bulunamadı")] ReceiverNotFound = 2,
+        [Display(Name = "Hasarlı")] Damaged = 3,
+        [Display(Name = "Reddedildi")] Rejected = 4
     }
 }

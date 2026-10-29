@@ -1,0 +1,40 @@
+﻿@using CargoTrack.DTO.DTOs.AddressDtos
+@model CreateAddressDto
+@{ ViewData["Title"] = "Yeni Adres"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Yeni Adres</h2>
+        <p class="text-on-surface-variant">Kargonuz bu adrese, adresin bulunduğu şehirdeki şubeden dağıtılır</p>
+    </div>
+</div>
+<form method="post" class="card max-w-xl">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="mb-4">
+        <label class="label">Adres Başlığı</label>
+        <input asp-for="Title" class="input" placeholder="Ev, İş, Annemin evi..." />
+        <span asp-validation-for="Title"></span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+            <label class="label">Şehir</label>
+            <select asp-for="CityId" asp-items="(List<SelectListItem>)ViewBag.Cities" class="input">
+                <option value="">Seçiniz</option>
+            </select>
+            <span asp-validation-for="CityId"></span>
+        </div>
+        <div>
+            <label class="label">İlçe</label>
+            <input asp-for="District" class="input" />
+            <span asp-validation-for="District"></span>
+        </div>
+    </div>
+    <div class="mb-6">
+        <label class="label">Açık Adres</label>
+        <textarea asp-for="FullAddress" class="input" rows="3" placeholder="Mahalle, cadde/sokak, bina no, daire no"></textarea>
+        <span asp-validation-for="FullAddress"></span>
+    </div>
+    <div class="flex gap-2">
+        <a asp-action="Index" class="btn-outline">Vazgeç</a>
+        <button class="btn-accent">Kaydet</button>
+    </div>
+</form>

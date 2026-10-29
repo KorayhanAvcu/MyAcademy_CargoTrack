@@ -1,0 +1,8 @@
+﻿@{ ViewData["Title"] = "Dashboard"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Genel Bakış</h2>
+        <p class="text-on-surface-variant">Tüm operasyonun anlık özeti</p>
+    </div>
+</div>
+@await Component.InvokeAsync("AdminDashboard")

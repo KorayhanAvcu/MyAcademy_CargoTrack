@@ -1,38 +1,34 @@
-﻿
-@model List<ResultBranchDto>
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h1>Şubelerimiz</h1>
-<table class="table table-bordered table-hover">
-    @{
-        int count = 0;
-    }
-
-    <tr>
-        <th>#</th>
-        <th>Şube İsmi</th>
-        <th>Şehir</th>
-        <th>İşlemler</th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        count++;
-        <tr>
-            <th>@count</th>
-            <td>@item.Name</td>
-            <td>@item.City.Name</td>
-            <td>
-                <a href="/Admin/Branch/Delete/@item.Id" onclick="return confirm('Silmek istediğinize emin misiniz?')" class="btn btn-danger">Sil</a>
-                <a href="/Admin/Branch/Update/@item.Id" class="btn btn-info">Güncelle</a>
-
-            </td>
-        </tr>
-    }
-
-</table>
-
-<a href="/Admin/Branch/Create" class="btn btn-dark">Yeni Şube Oluştur</a>
+﻿@model List<ResultBranchDto>
+@{ ViewData["Title"] = "Şubeler"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Şubeler</h2>
+        <p class="text-on-surface-variant">Kargo kabul ve dağıtım yapılan şubeler</p>
+    </div>
+    <div class="flex gap-2"><a asp-action="Create" class="btn-accent"><span class="material-symbols-outlined text-[18px]">add</span> Yeni Şube</a></div>
+</div>
+<div class="card !p-0 overflow-x-auto">
+    <table class="tbl">
+        <thead><tr><th>#</th><th>Şube</th><th>Şehir</th><th></th></tr></thead>
+        <tbody>
+            @{ var count = 0; }
+            @foreach (var item in Model.OrderBy(b => b.City?.Name).ThenBy(b => b.Name))
+            {
+                count++;
+                <tr>
+                    <td class="text-outline">@count</td>
+                    <td class="font-semibold">@item.Name</td>
+                    <td>@item.City?.Name</td>
+                    <td class="text-right whitespace-nowrap">
+                        <a asp-action="Update" asp-route-id="@item.Id" class="btn-outline btn-sm">Güncelle</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="inline" onsubmit="return confirm('Silmek istediğinize emin misiniz?')"><button type="submit" class="btn-danger btn-sm">Sil</button></form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="4" class="text-center text-outline py-10">Henüz şube yok.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

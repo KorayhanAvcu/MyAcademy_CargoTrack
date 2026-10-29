@@ -1,0 +1,133 @@
+﻿@{
+    var panelUrl = User.IsInRole("Admin") ? "/Admin/Dashboard"
+                 : User.IsInRole("Manager") ? "/Manager/Dashboard"
+                 : "/Customer/Dashboard";
+    var isSignedIn = User.Identity?.IsAuthenticated == true;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>@ViewData["Title"] - CargoTrack</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#dce9ff",
+                        "on-surface-variant": "#43474e",
+                        "outline": "#74777e",
+                        "secondary-fixed": "#ffdcc3",
+                        "secondary": "#904d00",
+                        "background": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "on-background": "#0b1c30",
+                        "surface-bright": "#f8f9ff",
+                        "primary-fixed-dim": "#afc8ee",
+                        "primary-fixed": "#d3e3ff",
+                        "primary-container": "#001e3c",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary": "#00040c",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c4c6ce",
+                        "surface-container": "#e5eeff",
+                        "on-primary-container": "#6f87aa",
+                        "on-surface": "#0b1c30",
+                        "surface-container-low": "#eff4ff",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#486081",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "secondary-container": "#fd8b00",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    "spacing": {
+                        "section-padding": "4rem",
+                        "container-max-width": "1200px",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1.5rem",
+                        "margin-mobile": "1rem"
+                    },
+                    "fontFamily": {
+                        "status-label": ["Hanken Grotesk"], "body-lg": ["Hanken Grotesk"], "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"], "body-md": ["Hanken Grotesk"], "headline-xl": ["Hanken Grotesk"],
+                        "label-caps": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "status-label": ["13px", { "lineHeight": "18px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Hanken Grotesk', sans-serif; background-color: #f8f9ff; color: #0b1c30; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .filled-icon { font-variation-settings: 'FILL' 1; }
+        .timeline-line::before { content: ''; position: absolute; left: 11px; top: 24px; bottom: -24px; width: 2px; background-color: #E2E8F0; z-index: 0; }
+        .timeline-item:last-child .timeline-line::before { display: none; }
+        .progress-bar-bg { background-color: #334155; }
+        .progress-bar-fill { background-color: #fd8b00; }
+        @@media print { header, footer, .no-print { display: none !important; } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="bg-surface border-b border-outline-variant shadow-sm z-50">
+        <div class="flex justify-between items-center px-gutter py-4 max-w-container-max-width mx-auto w-full">
+            <a href="/" class="flex items-center gap-2">
+                <span class="material-symbols-outlined filled-icon text-primary text-3xl">local_shipping</span>
+                <span class="font-headline-md text-headline-md font-bold text-on-background">CargoTrack</span>
+            </a>
+            <nav class="hidden md:flex gap-6 items-center">
+                <a class="text-on-surface-variant hover:text-primary transition-colors py-2" href="/">Ana Sayfa</a>
+                <a class="text-secondary font-bold border-b-2 border-secondary pb-1 py-2" href="/">Kargo Takip</a>
+            </nav>
+            <div class="flex items-center gap-3">
+                @if (isSignedIn)
+                {
+                    <a href="@panelUrl" class="bg-primary-container text-on-primary px-5 py-2 rounded-lg font-semibold hover:bg-primary transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">dashboard</span> Panelim
+                    </a>
+                    <a href="/Login/Logout" class="text-on-surface-variant hover:text-primary font-semibold">Çıkış</a>
+                }
+                else
+                {
+                    <a href="/Login/Index" class="text-on-surface-variant hover:text-primary font-semibold">Giriş Yap</a>
+                    <a href="/Register/Signup" class="bg-primary-container text-on-primary px-5 py-2 rounded-lg font-semibold hover:bg-primary transition-colors">Kayıt Ol</a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-container-max-width mx-auto px-margin-mobile md:px-gutter py-8 md:py-12">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-primary-container text-on-primary-container py-8 px-gutter w-full mt-auto">
+        <div class="max-w-container-max-width mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="font-headline-md text-headline-md font-bold text-surface-bright">CargoTrack</div>
+            <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-sm">
+                <a class="opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-colors" href="#">Gizlilik Politikası</a>
+                <a class="opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-colors" href="#">Kullanım Şartları</a>
+                <a class="opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-colors" href="#">KVKK Aydınlatma Metni</a>
+            </div>
+            <div class="text-sm opacity-80">© @DateTime.Now.Year CargoTrack Lojistik A.Ş. Tüm hakları saklıdır.</div>
+        </div>
+    </footer>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

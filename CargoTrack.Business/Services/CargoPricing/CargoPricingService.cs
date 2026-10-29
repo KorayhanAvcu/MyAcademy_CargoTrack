@@ -8,13 +8,11 @@ namespace CargoTrack.Business.Services.CargoPricing
     public class CargoPricingService(ICargoPriceRepository _cargoPriceRepository,
                                      IBranchRepository _branchRepository) : ICargoPricingService
     {
-        // PDF'teki formül: En × Boy × Yükseklik / 3000
         public double CalculateDesi(double width, double length, double height)
         {
             return Math.Round(width * length * height / 3000, 2);
         }
 
-        // İki şube aynı şehirdeyse şehir içi, değilse şehirler arası
         public async Task<DistanceType> GetDistanceTypeAsync(Guid originBranchId, Guid destinationBranchId)
         {
             var origin = await _branchRepository.GetByIdAsync(originBranchId)
@@ -27,8 +25,7 @@ namespace CargoTrack.Business.Services.CargoPricing
 
         public async Task<decimal> CalculatePriceAsync(double desi, double weight, DeliveryType deliveryType, DistanceType distanceType)
         {
-            // Desi ile kilodan hangisi büyükse ücret onun üzerinden hesaplanır
-            var billable = Math.Max(desi, weight);
+            var billable = Math.Round(Math.Max(desi, weight), 2);
 
             var priceRule = await _cargoPriceRepository.GetFirstAsync(p =>
                 p.DeliveryType == deliveryType &&
@@ -41,7 +38,6 @@ namespace CargoTrack.Business.Services.CargoPricing
             return priceRule.Price;
         }
 
-        // SLA: teslimat tipine ve mesafeye göre gün sayısı
         public DateTime CalculateEstimatedArrivalDate(DateTime shipmentDate, DeliveryType deliveryType, DistanceType distanceType)
         {
             var days = (deliveryType, distanceType) switch

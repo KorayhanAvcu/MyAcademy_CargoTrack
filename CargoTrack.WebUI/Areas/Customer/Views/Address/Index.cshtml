@@ -1,0 +1,43 @@
+﻿@using CargoTrack.DTO.DTOs.AddressDtos
+@model List<ResultAddressDto>
+@{ ViewData["Title"] = "Adreslerim"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Adreslerim</h2>
+        <p class="text-on-surface-variant">Size gönderilen kargolar bu adreslerden birine teslim edilir</p>
+    </div>
+    <div class="flex gap-2"><a asp-action="Create" class="btn-accent"><span class="material-symbols-outlined text-[18px]">add_location_alt</span> Yeni Adres</a></div>
+</div>
+@if (!Model.Any())
+{
+    <div class="card text-center py-12">
+        <span class="material-symbols-outlined text-[48px] text-outline">home_pin</span>
+        <p class="text-lg font-semibold mt-2">Henüz kayıtlı adresiniz yok</p>
+        <p class="text-on-surface-variant mb-6">Size kargo gönderilebilmesi için en az bir adres eklemelisiniz.</p>
+        <a asp-action="Create" class="btn-accent">Adres Ekle</a>
+    </div>
+}
+else
+{
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        @foreach (var a in Model)
+        {
+            <div class="card flex flex-col">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-surface-container-high text-primary-container flex items-center justify-center">
+                        <span class="material-symbols-outlined">home_pin</span>
+                    </div>
+                    <div>
+                        <p class="font-semibold">@a.Title</p>
+                        <p class="text-sm text-outline">@a.District / @a.CityName</p>
+                    </div>
+                </div>
+                <p class="text-on-surface-variant flex-1 mb-4">@a.FullAddress</p>
+                <div class="flex gap-2">
+                    <a asp-action="Update" asp-route-id="@a.Id" class="btn-outline btn-sm">Düzenle</a>
+                    <form asp-action="Delete" asp-route-id="@a.Id" method="post" class="inline" onsubmit="return confirm('Bu adresi silmek istediğinize emin misiniz?')"><button type="submit" class="btn-danger btn-sm">Sil</button></form>
+                </div>
+            </div>
+        }
+    </div>
+}

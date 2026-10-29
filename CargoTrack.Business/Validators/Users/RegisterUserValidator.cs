@@ -17,7 +17,7 @@ namespace CargoTrack.Business.Validators.Users
             RuleFor(x => x.UserName).NotEmpty().WithMessage("Kullanıcı adı bilgisi boş bırakılamaz.");
             RuleFor(x => x.Email).NotEmpty().WithMessage("Email bilgisi boş bırakılamaz.").EmailAddress().WithMessage("Geçerli bir email adresi girin.");
             RuleFor(x => x.Password).NotEmpty().WithMessage("Şifre bilgisi boş bırakılamaz.");
-            RuleFor(x => x.ConfirmPassword).NotEmpty().WithMessage("Şifre tekrarı bilgisi boş bırakılamaz.").Matches(x=>x.Password).WithMessage("Şifreler birbiriyle uyumlu değil");
+            RuleFor(x => x.ConfirmPassword).NotEmpty().WithMessage("Şifre tekrarı bilgisi boş bırakılamaz.").Equal(x => x.Password).WithMessage("Şifreler birbiriyle uyumlu değil.");
         }
     }
 }

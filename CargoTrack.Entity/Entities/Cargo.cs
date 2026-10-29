@@ -10,7 +10,6 @@ namespace CargoTrack.Entity.Entities
         public DateTime EstimatedArrivalDate { get; set; }
         public DateTime? DeliveredDate { get; set; }
 
-        // Ölçüler ve fiyat
         public double Weight { get; set; }
         public double Width { get; set; }
         public double Length { get; set; }
@@ -22,8 +21,7 @@ namespace CargoTrack.Entity.Entities
         public DeliveryType DeliveryType { get; set; }
         public CargoStatus CargoStatus { get; set; }
 
-        // Teslimat kuralları
-        public string? DeliveryCode { get; set; }
+        public string DeliveryCode { get; set; } = string.Empty;
         public int FailedAttemptCount { get; set; }
 
         public Guid SenderId { get; set; }
@@ -31,11 +29,14 @@ namespace CargoTrack.Entity.Entities
         public Guid OriginBranchId { get; set; }
         public Guid DestinationBranchId { get; set; }
 
-        //Navigation Properties
+        public Guid? ReceiverAddressId { get; set; }
+        public string? DeliveryAddress { get; set; }
+
         public virtual AppUser Sender { get; set; }
         public virtual AppUser Receiver { get; set; }
         public virtual Branch OriginBranch { get; set; }
         public virtual Branch DestinationBranch { get; set; }
+        public virtual Address? ReceiverAddress { get; set; }
         public virtual IList<CargoMovement> Movements { get; set; }
         public virtual IList<DeliveryException> DeliveryExceptions { get; set; }
         public virtual Delivery? Delivery { get; set; }

@@ -1,0 +1,30 @@
+﻿@model List<ResultTransferCenterDto>
+@{ ViewData["Title"] = "Transfer Merkezleri"; }
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div>
+        <h2 class="page-title">Transfer Merkezleri</h2>
+        <p class="text-on-surface-variant">Kargoların şubeler arasında geçtiği aktarma noktaları</p>
+    </div>
+    <div class="flex gap-2"><a asp-action="Create" class="btn-accent"><span class="material-symbols-outlined text-[18px]">add</span> Yeni Transfer Merkezi</a></div>
+</div>
+<div class="card !p-0 overflow-x-auto">
+    <table class="tbl">
+        <thead><tr><th>Ad</th><th>Şehir</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><span class="font-semibold">@item.Name</span></td><td>@item.CityName</td>
+                    <td class="text-right whitespace-nowrap">
+                        <a asp-action="Update" asp-route-id="@item.Id" class="btn-outline btn-sm">Güncelle</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="inline" onsubmit="return confirm('Silmek istediğinize emin misiniz?')"><button type="submit" class="btn-danger btn-sm">Sil</button></form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="3" class="text-center text-outline py-10">Kayıt bulunamadı.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
